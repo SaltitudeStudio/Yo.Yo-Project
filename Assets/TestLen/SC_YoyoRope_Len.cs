@@ -5,28 +5,55 @@ using UnityEngine;
 public class SC_YoyoRope_Len : MonoBehaviour
 {
 
-    List<GameObject> Segments;
+    [SerializeField]
+    List<GameObject> ropeSegments;
+
+    [SerializeField]
+    GameObject firstSegment;
+    [SerializeField]
+    GameObject lastSegment;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        ropeSegments.Add(firstSegment);
+        ropeSegments.Add(lastSegment);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+    }
+
+    public void AddRopeSegment()
+    {
+
+        Debug.Log("AddRopeSegment");
+
+        GameObject _newSegment = new GameObject("Segment_" + ropeSegments.Count.ToString());
+        _newSegment.transform.parent = this.transform;
+
         
+        for (int i = 0; i < ropeSegments.Count; i++)
+        {
+            if (ropeSegments[i] == lastSegment)
+            {
+                ropeSegments.Insert(i, _newSegment);
+                break;
+            }
+        }
+
+        Rigidbody2D _curSegmentRb = _newSegment.AddComponent<Rigidbody2D>();
+        DistanceJoint2D _curSegmentJoint = _newSegment.AddComponent<DistanceJoint2D>();
+
+        _curSegmentJoint.autoConfigureDistance = false;
+
     }
 
-    void AddRopeSegment()
+    public void RemoveRopeSegment()
     {
-
-    }
-
-    void RemoveRopeSegment()
-    {
-
+        Debug.Log("RemoveRopeSegment");
     }
 
 }
