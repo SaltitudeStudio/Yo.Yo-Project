@@ -24,7 +24,12 @@ public class SC_UpdateLineCollider_Len : MonoBehaviour
     void Update()
     {
 
-        UpdateEc();
+        //UpdateEc();
+
+    }
+
+    void UpdateLr()
+    {
 
     }
 
