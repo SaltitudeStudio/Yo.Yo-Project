@@ -1,0 +1,33 @@
+{
+    "name": "Inputs_zx",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "319585e6-1da2-48c2-91c8-b2428dfefd7c",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "732b63fc-146a-4fdd-8ad3-631ea8bf8828",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ab1c9460-2ac1-475f-9d59-cf5602f5edc9",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
