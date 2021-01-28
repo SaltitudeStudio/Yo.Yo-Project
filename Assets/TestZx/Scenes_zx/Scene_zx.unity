@@ -372,13 +372,25 @@ MonoBehaviour:
       m_Calls: []
   m_ControlsChangedEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1600282335}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1600282335}
         m_TargetAssemblyTypeName: SC_Rope_zx, Assembly-CSharp
-        m_MethodName: SetNewMousePosition
+        m_MethodName: DeltaPostion
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -390,6 +402,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 732b63fc-146a-4fdd-8ad3-631ea8bf8828
     m_ActionName: Player/Move[/Mouse/press]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1600282335}
+        m_TargetAssemblyTypeName: SC_Rope_zx, Assembly-CSharp
+        m_MethodName: AddRopeLenght
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 40b76bc7-f8bc-4f9a-924a-3df01f291607
+    m_ActionName: Player/ModifyLenght[/XInputControllerWindows/leftTrigger,/XInputControllerWindows/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1600282335}
+        m_TargetAssemblyTypeName: SC_Rope_zx, Assembly-CSharp
+        m_MethodName: RemoveRopeLenght
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 46461a0c-06da-4035-879b-d0475e191e74
+    m_ActionName: Player/RemoveRopeLenght[/XInputControllerWindows/leftTrigger]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

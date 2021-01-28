@@ -10,6 +10,22 @@
                     "type": "Value",
                     "id": "732b63fc-146a-4fdd-8ad3-631ea8bf8828",
                     "expectedControlType": "Vector2",
+                    "processors": "NormalizeVector2",
+                    "interactions": ""
+                },
+                {
+                    "name": "AddRopeLenght",
+                    "type": "Button",
+                    "id": "40b76bc7-f8bc-4f9a-924a-3df01f291607",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RemoveRopeLenght",
+                    "type": "Button",
+                    "id": "46461a0c-06da-4035-879b-d0475e191e74",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 }
@@ -17,12 +33,34 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "ab1c9460-2ac1-475f-9d59-cf5602f5edc9",
-                    "path": "<Mouse>/position",
+                    "id": "63fb2972-64df-40bf-aa17-23b41cbd4c46",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3a5fdf69-cf32-4ba9-9a91-f58e37cc70c0",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RemoveRopeLenght",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "de7613fd-7bfa-416e-bc62-b49770c8a979",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "Press(pressPoint=0.2,behavior=2)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AddRopeLenght",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -10,14 +10,20 @@ public class SC_Rope_zx : MonoBehaviour
     private LineRenderer lineRenderer;
     private List<RopeSegment> ropeSegments = new List<RopeSegment>();
     private float ropeSegLen = 0.25f;
-    private int segmentLength = 35;
+    private int segmentLength = 20;
     private float lineWidth = 0.1f;
-    private Vector3 MousePosition = new Vector3(0, 0, 0);
+    private Vector2 RopeNewPosition = new Vector2(0,0);
+    private Vector2 DeltaPosition = new Vector2(0,0);
+    private int segmentLenghtDelta = 0;
+    private Coroutine addRopeSegment;
+    private Coroutine removeRopeSegment;
+    private int maxSegments = 30;
+
     // Use this for initialization
     void Start()
     {
         this.lineRenderer = this.GetComponent<LineRenderer>();
-        Vector3 ropeStartPoint = this.MousePosition;
+        Vector2 ropeStartPoint = this.RopeNewPosition;
 
         for (int i = 0; i < segmentLength; i++)
         {
@@ -63,7 +69,8 @@ public class SC_Rope_zx : MonoBehaviour
     {
         //Constrant to Mouse
         RopeSegment firstSegment = this.ropeSegments[0];
-        firstSegment.posNow = MousePosition;
+        RopeNewPosition += DeltaPosition;
+        firstSegment.posNow = RopeNewPosition;
         this.ropeSegments[0] = firstSegment;
 
         for (int i = 0; i < this.segmentLength - 1; i++)
@@ -128,9 +135,61 @@ public class SC_Rope_zx : MonoBehaviour
         }
     }
 
-    public void SetNewMousePosition(InputAction.CallbackContext Context)
+    public void DeltaPostion(InputAction.CallbackContext Context)
     {
-        MousePosition = Context.ReadValue<Vector2>();
-        Debug.Log(MousePosition);
+
+        DeltaPosition = Context.ReadValue<Vector2>();
+        DeltaPosition /= 200;        
+    }
+
+    public void AddRopeLenght(InputAction.CallbackContext Context)
+    {
+        if(Context.ReadValueAsButton())
+        {
+            if (addRopeSegment == null)
+            addRopeSegment = StartCoroutine(AddRopeSegment());
+        }
+        else if(addRopeSegment != null)
+        {
+
+            StopCoroutine(addRopeSegment);
+            addRopeSegment = null;
+        }
+    }
+
+    public void RemoveRopeLenght(InputAction.CallbackContext Context)
+    {
+        Debug.Log(Context.ReadValueAsButton());
+        if (Context.ReadValueAsButton())
+        {
+            if(removeRopeSegment == null)
+            removeRopeSegment = StartCoroutine(RemoveRopeSegment());
+        }
+        else if(removeRopeSegment != null)
+        {
+            StopCoroutine(removeRopeSegment);
+            removeRopeSegment = null;
+        }
+    }
+
+    IEnumerator AddRopeSegment()
+    {
+        while(true && segmentLength < maxSegments)
+        {
+            this.ropeSegments.Add(new RopeSegment(ropeSegments[ropeSegments.Count-1].posNow - new Vector2(0, ropeSegLen)));
+            segmentLength += 1;
+            yield return new WaitForSeconds(0.002f);
+
+        }
+     
+    }
+    IEnumerator RemoveRopeSegment()
+    {
+        while (true && segmentLength > 1)
+        {
+            segmentLength -= 1;
+            this.ropeSegments.RemoveAt(ropeSegments.Count - 1);
+            yield return new WaitForSeconds(0.002f);
+        }
     }
 }
