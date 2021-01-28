@@ -11,7 +11,7 @@
                     "id": "ba4913af-4e64-4b89-aacf-c5e6422979c5",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 },
                 {
                     "name": "RemoveRopeSegment",

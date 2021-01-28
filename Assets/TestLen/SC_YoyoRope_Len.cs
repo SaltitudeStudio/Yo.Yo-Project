@@ -31,10 +31,11 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
         Debug.Log("AddRopeSegment");
 
+        //
         GameObject _newSegment = new GameObject("Segment_" + ropeSegments.Count.ToString());
         _newSegment.transform.parent = this.transform;
 
-        
+
         for (int i = 0; i < ropeSegments.Count; i++)
         {
             if (ropeSegments[i] == lastSegment)
@@ -48,6 +49,11 @@ public class SC_YoyoRope_Len : MonoBehaviour
         DistanceJoint2D _curSegmentJoint = _newSegment.AddComponent<DistanceJoint2D>();
 
         _curSegmentJoint.autoConfigureDistance = false;
+        _curSegmentJoint.distance = 0.1f;
+
+        for (int i = 0; i < ropeSegments.Count; i++)
+            if (i > 0)
+                ropeSegments[i].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[i - 1].GetComponent<Rigidbody2D>();
 
     }
 
