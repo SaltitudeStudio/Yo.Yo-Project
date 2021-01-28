@@ -1,0 +1,66 @@
+{
+    "name": "PlayerControl",
+    "maps": [
+        {
+            "name": "Ground",
+            "id": "a3631f2b-2183-4838-a1f7-93a30381273f",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "d1f4ab75-b35c-43f0-8fd4-78eeeab4fd88",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "1D Axis",
+                    "id": "7de35e5a-aa5f-4164-9e01-cc2a2e6f20e5",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "550eb88b-9814-4d27-9c71-63eb27a70430",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "a7ee0298-abaa-4233-9533-b766b246b805",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "38bf1c1f-ed1f-4471-99f4-6d5888b990d7",
+                    "path": "<Keyboard>/space",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
