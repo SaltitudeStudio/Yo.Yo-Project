@@ -10,6 +10,8 @@ public class SC_YoyoRope_Len : MonoBehaviour
     int maxRopeLength = 50;
     private int minRopeLength = 2;
     [SerializeField]
+    float ropeElasticityLength = 1f;
+    [SerializeField]
     float ropeSegmentLength = 0.1f;
     [SerializeField]
     float ropeSegmentMass = 0.1f;
@@ -55,7 +57,9 @@ public class SC_YoyoRope_Len : MonoBehaviour
             {
                 if (ropeSegments[i] == lastSegment)
                 {
+
                     ropeSegments.Insert(i, _newSegment);
+
                     break;
                 }
             }
@@ -63,6 +67,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
             Rigidbody2D _curSegmentRb = _newSegment.AddComponent<Rigidbody2D>();
             //piti poids pour moins de soucis
             _curSegmentRb.mass = ropeSegmentMass;
+            //_curSegmentRb.angularDrag = 0;
 
             // How To Switch Dist/Hinge : 
             // Garde que le paragraphe voulu ci-dessous
@@ -74,6 +79,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
             _curSegmentJoint.autoConfigureDistance = false;
             _curSegmentJoint.distance = ropeSegmentLength;
 
+
             /*
             // HingeJoint2D
             HingeJoint2D _curSegmentJoint = _newSegment.AddComponent<HingeJoint2D>();
@@ -81,9 +87,11 @@ public class SC_YoyoRope_Len : MonoBehaviour
             _curSegmentJoint.connectedAnchor = new Vector2(0, -ropeSegmentLength);
             */
 
-            for (int i = 0; i < ropeSegments.Count; i++)
-                if (i > 0)
-                    ropeSegments[i].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[i - 1].GetComponent<Rigidbody2D>();
+            for (int j = 0; j < ropeSegments.Count; j++)
+                if (j > 0)
+                    ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[ j - 1].GetComponent<Rigidbody2D>();
+
+            //UpdateGlobaDist();
 
         }
 
@@ -107,13 +115,15 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
                     ropeSegments.RemoveAt(i);
 
-                    
+
                     for (int j = 0; j < ropeSegments.Count; j++)
                         if (j > 0)
                             ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();
-                    
+
 
                     Destroy(_segmentToRemove);
+
+                    //UpdateGlobaDist();
 
                     break;
 
@@ -123,6 +133,11 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
         }
 
+    }
+
+    void UpdateGlobaDist()
+    {
+        firstSegment.GetComponent<DistanceJoint2D>().distance = ropeSegments.Count * ropeSegmentLength + ropeElasticityLength;
     }
 
     public void UpdateLineRenderer()

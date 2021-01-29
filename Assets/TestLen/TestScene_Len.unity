@@ -1842,6 +1842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxRopeLength: 50
+  ropeElasticityLength: 1
   ropeSegmentLength: 0.1
   ropeSegmentMass: 0.1
   firstSegment: {fileID: 2140525104}
@@ -2704,6 +2705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2140525105}
   - component: {fileID: 2140525106}
+  - component: {fileID: 2140525107}
   m_Layer: 0
   m_Name: First Segment
   m_TagString: Untagged
@@ -2746,6 +2748,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!232 &2140525107
+DistanceJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140525104}
+  m_Enabled: 0
+  serializedVersion: 4
+  m_EnableCollision: 0
+  m_ConnectedRigidBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_AutoConfigureConnectedAnchor: 0
+  m_Anchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 0, y: 0}
+  m_AutoConfigureDistance: 0
+  m_Distance: 4
+  m_MaxDistanceOnly: 0
 --- !u!1001 &922332860538576137
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2756,6 +2777,10 @@ PrefabInstance:
     - target: {fileID: 922332860714704916, guid: 5b337efb6cda63a4ebab49098105148b, type: 3}
       propertyPath: m_Name
       value: CyRope
+      objectReference: {fileID: 0}
+    - target: {fileID: 922332860714704916, guid: 5b337efb6cda63a4ebab49098105148b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 922332860714704919, guid: 5b337efb6cda63a4ebab49098105148b, type: 3}
       propertyPath: m_RootOrder
