@@ -10,11 +10,13 @@ public class SC_YoyoRope_Len : MonoBehaviour
     int maxRopeLength = 50;
     private int minRopeLength = 2;
     [SerializeField]
-    float ropeElasticityLength = 1f;
+    float ropeElasticityLength = 0.1f;
     [SerializeField]
     float ropeSegmentLength = 0.1f;
     [SerializeField]
     float ropeSegmentMass = 0.1f;
+    [SerializeField]
+    float ropeSegmentRadius = 0.04f;
 
     [Header("Rope References")]
     [SerializeField]
@@ -31,6 +33,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
     {
         ropeSegments.Add(firstSegment);
         ropeSegments.Add(lastSegment);
+        UpdateGlobaDist();
     }
 
     // Update is called once per frame
@@ -51,6 +54,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
             //spawn a une position plus cool pour la physique
             _newSegment.transform.position = lastSegment.transform.position;
             _newSegment.transform.parent = this.transform;
+            _newSegment.layer = 9;
 
 
             for (int i = 0; i < ropeSegments.Count; i++)
@@ -69,6 +73,9 @@ public class SC_YoyoRope_Len : MonoBehaviour
             _curSegmentRb.mass = ropeSegmentMass;
             //_curSegmentRb.angularDrag = 0;
 
+            CircleCollider2D _curSegmentCol = _newSegment.AddComponent<CircleCollider2D>();
+            _curSegmentCol.radius = ropeSegmentRadius;
+
             // How To Switch Dist/Hinge : 
             // Garde que le paragraphe voulu ci-dessous
             // Remplacer le type de connected body ci-ci-dessous
@@ -79,7 +86,6 @@ public class SC_YoyoRope_Len : MonoBehaviour
             _curSegmentJoint.autoConfigureDistance = false;
             _curSegmentJoint.distance = ropeSegmentLength;
 
-
             /*
             // HingeJoint2D
             HingeJoint2D _curSegmentJoint = _newSegment.AddComponent<HingeJoint2D>();
@@ -89,9 +95,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
             for (int j = 0; j < ropeSegments.Count; j++)
                 if (j > 0)
-                    ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[ j - 1].GetComponent<Rigidbody2D>();
-
-            //UpdateGlobaDist();
+                    ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();
 
         }
 
@@ -115,15 +119,11 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
                     ropeSegments.RemoveAt(i);
 
-
                     for (int j = 0; j < ropeSegments.Count; j++)
                         if (j > 0)
                             ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();
 
-
                     Destroy(_segmentToRemove);
-
-                    //UpdateGlobaDist();
 
                     break;
 
@@ -137,7 +137,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
     void UpdateGlobaDist()
     {
-        firstSegment.GetComponent<DistanceJoint2D>().distance = ropeSegments.Count * ropeSegmentLength + ropeElasticityLength;
+        firstSegment.GetComponent<DistanceJoint2D>().distance = (ropeSegments.Count * ropeSegmentLength) + ropeElasticityLength;
     }
 
     public void UpdateLineRenderer()
