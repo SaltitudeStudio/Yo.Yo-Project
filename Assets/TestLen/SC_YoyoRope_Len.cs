@@ -64,11 +64,22 @@ public class SC_YoyoRope_Len : MonoBehaviour
         //piti poids pour moins de soucis
         _curSegmentRb.mass = 0.1f;
 
+        // How To Switch Dist/Hinge : 
+        // Garde que le paragraphe voulu ci-dessous
+        // Remplacer le type de connected body ci-ci-dessous
+        // Activer le component correspondant sur LastSegment et desactiver l'autre
 
+        //DistantJoint2D
         DistanceJoint2D _curSegmentJoint = _newSegment.AddComponent<DistanceJoint2D>();
-
         _curSegmentJoint.autoConfigureDistance = false;
         _curSegmentJoint.distance = 0.1f;
+
+        /*
+        // HingeJoint2D
+        HingeJoint2D _curSegmentJoint = _newSegment.AddComponent<HingeJoint2D>();
+        _curSegmentJoint.autoConfigureConnectedAnchor = false;
+        _curSegmentJoint.connectedAnchor = new Vector2(0, -0.1f);
+        */
 
         for (int i = 0; i < ropeSegments.Count; i++)
             if (i > 0)
@@ -80,10 +91,9 @@ public class SC_YoyoRope_Len : MonoBehaviour
     {
         Debug.Log("RemoveRopeSegment");
     }
-
-
     public void UpdateLineRenderer()
     {
+
         LineRenderer lineRender = GetComponent<LineRenderer>();
 
         lineRender.positionCount = ropeSegments.Count;
