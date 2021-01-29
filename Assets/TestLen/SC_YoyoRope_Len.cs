@@ -25,10 +25,16 @@ public class SC_YoyoRope_Len : MonoBehaviour
     {
         //              /!\
 
-        // J'ai ajouté un line render vite fait, mais j'ai surtout testé le distance joint qui fait nimp du coup, j'ai l'impression qu'il transmet pas la force dans tous
-        // les cas où on déplace la position autrement qu'en physique => ^super gênant, le spring joint était prometteur au niveau du réalisme, mais l'elasticité est trop dure à controler. 
+        // J'ai ajouté un line render vite fait, mais j'ai surtout testé le distance joint qui reste assez elastique
+        // Du coup il y a de l'énergie qui ne se transmet pas et c'est gênant!
+        //  le spring joint était prometteur au niveau du réalisme, mais l'elasticité est difficile à controler, faudrait plus de test. 
         // Le hinge joint me semble être le plus prometteur en l'état, il a un comportement assez correct et s'ajuste plus ou moins bien, à voir.
+        // ====> du coup j'ai testé une version alternative avec des hinge joints hésite pas à tester pour mixer => par contre si ca va trop vite, ça fucked up
+        //j'ai reverse 98% de mes changements sauf 2-3 ptis trucs pour te faire gagner du temps
         //Cy
+
+        //PS => J'ai boosté la physique comme un gros porc, que ça soit niveau des itération autant qu'au niveau du fixed update qui s'effectue 10X plus vite. 
+        //Full déjà vue. C'est ptet trop mais juste sinon CA NE MARCHAIT PAS. tout simplement. Genre ta ficelle elle partait en live dès qu'on la déplaçait.
 
         UpdateLineRenderer();
     }
@@ -40,6 +46,8 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
         //
         GameObject _newSegment = new GameObject("Segment_" + ropeSegments.Count.ToString());
+        //spawn a une position plus cool pour la physique
+        _newSegment.transform.position = lastSegment.transform.position;
         _newSegment.transform.parent = this.transform;
 
 
@@ -53,6 +61,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
         }
 
         Rigidbody2D _curSegmentRb = _newSegment.AddComponent<Rigidbody2D>();
+        //piti poids pour moins de soucis
         _curSegmentRb.mass = 0.1f;
 
 
