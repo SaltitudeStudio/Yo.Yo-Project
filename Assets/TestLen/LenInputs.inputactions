@@ -11,7 +11,7 @@
                     "id": "ba4913af-4e64-4b89-aacf-c5e6422979c5",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press"
+                    "interactions": ""
                 },
                 {
                     "name": "RemoveRopeSegment",
@@ -26,7 +26,7 @@
                 {
                     "name": "",
                     "id": "6d66791d-467f-437a-98e0-4ef77ac5e49e",
-                    "path": "<Keyboard>/numpadPlus",
+                    "path": "<Keyboard>/2",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -37,7 +37,7 @@
                 {
                     "name": "",
                     "id": "7ac505e5-6dba-4b41-843b-cec23214cd2a",
-                    "path": "<Keyboard>/minus",
+                    "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
