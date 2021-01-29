@@ -85,6 +85,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
             DistanceJoint2D _curSegmentJoint = _newSegment.AddComponent<DistanceJoint2D>();
             _curSegmentJoint.autoConfigureDistance = false;
             _curSegmentJoint.distance = ropeSegmentLength;
+            _curSegmentJoint.maxDistanceOnly = true;
 
             /*
             // HingeJoint2D
