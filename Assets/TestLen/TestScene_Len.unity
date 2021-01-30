@@ -1591,10 +1591,10 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 865067831}
-        m_TargetAssemblyTypeName: SC_YoyoRope_Len, Assembly-CSharp
-        m_MethodName: AddRopeSegment
-        m_Mode: 1
+      - m_Target: {fileID: 2116844309}
+        m_TargetAssemblyTypeName: SC_Yoyo_Len, Assembly-CSharp
+        m_MethodName: OnAddRope
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1607,10 +1607,10 @@ MonoBehaviour:
     m_ActionName: Player/AddRopeSegment[/Keyboard/2]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 865067831}
-        m_TargetAssemblyTypeName: SC_YoyoRope_Len, Assembly-CSharp
-        m_MethodName: RemoveRopeSegment
-        m_Mode: 1
+      - m_Target: {fileID: 2116844309}
+        m_TargetAssemblyTypeName: SC_Yoyo_Len, Assembly-CSharp
+        m_MethodName: OnBringBackYoyo
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1621,6 +1621,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 4761a842-4ce7-4a42-bd70-831a0d7f68bd
     m_ActionName: Player/RemoveRopeSegment[/Keyboard/1]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2116844309}
+        m_TargetAssemblyTypeName: SC_Yoyo_Len, Assembly-CSharp
+        m_MethodName: OnBringBackYoyo
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 33d15a56-e5db-48ad-af77-438be184e29a
+    m_ActionName: Player/YoyoAction[/XInputControllerWindows/rightShoulder]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2991,6 +3007,8 @@ GameObject:
   - component: {fileID: 2116844306}
   - component: {fileID: 2116844304}
   - component: {fileID: 2116844305}
+  - component: {fileID: 2116844309}
+  - component: {fileID: 2116844308}
   m_Layer: 8
   m_Name: Yoyo
   m_TagString: Untagged
@@ -3100,6 +3118,38 @@ Transform:
   m_Father: {fileID: 920410833}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!255 &2116844308
+FixedJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116844303}
+  m_Enabled: 0
+  serializedVersion: 4
+  m_EnableCollision: 0
+  m_ConnectedRigidBody: {fileID: 1315469092}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_AutoConfigureConnectedAnchor: 0
+  m_Anchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 0, y: 0}
+  m_DampingRatio: 0
+  m_Frequency: 0
+--- !u!114 &2116844309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116844303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71bb22aabcf010c46ba20b9813e2aafb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scYoyoRope: {fileID: 865067831}
+  curYoyoState: 0
 --- !u!1 &2134507782
 GameObject:
   m_ObjectHideFlags: 0

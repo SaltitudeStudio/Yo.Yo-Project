@@ -7,7 +7,7 @@
             "actions": [
                 {
                     "name": "AddRopeSegment",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "ba4913af-4e64-4b89-aacf-c5e6422979c5",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -17,6 +17,14 @@
                     "name": "RemoveRopeSegment",
                     "type": "Button",
                     "id": "4761a842-4ce7-4a42-bd70-831a0d7f68bd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "YoyoAction",
+                    "type": "Button",
+                    "id": "33d15a56-e5db-48ad-af77-438be184e29a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -42,6 +50,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "RemoveRopeSegment",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "76830df5-805c-4742-9189-51e274c6bf22",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "YoyoAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

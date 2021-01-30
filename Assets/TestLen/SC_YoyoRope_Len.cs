@@ -33,7 +33,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
     {
         ropeSegments.Add(firstSegment);
         ropeSegments.Add(lastSegment);
-        UpdateGlobaDist();
+        //UpdateGlobaDist();
     }
 
     // Update is called once per frame
@@ -42,7 +42,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
         UpdateLineRenderer();
     }
 
-    public void AddRopeSegment()
+    public bool AddRopeSegment()
     {
 
         Debug.Log("AddRopeSegment");
@@ -65,6 +65,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
                     ropeSegments.Insert(i, _newSegment);
 
                     break;
+
                 }
             }
 
@@ -98,11 +99,15 @@ public class SC_YoyoRope_Len : MonoBehaviour
                 if (j > 0)
                     ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();
 
+            return true;
+
         }
+
+        return false;
 
     }
 
-    public void RemoveRopeSegment()
+    public bool RemoveRopeSegment()
     {
 
         Debug.Log("RemoveRopeSegment");
@@ -126,7 +131,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
                     Destroy(_segmentToRemove);
 
-                    break;
+                    return true;
 
                 }
 
@@ -134,11 +139,8 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
         }
 
-    }
+        return false;
 
-    void UpdateGlobaDist()
-    {
-        firstSegment.GetComponent<DistanceJoint2D>().distance = (ropeSegments.Count * ropeSegmentLength) + ropeElasticityLength;
     }
 
     public void UpdateLineRenderer()
@@ -153,6 +155,11 @@ public class SC_YoyoRope_Len : MonoBehaviour
             lineRender.SetPosition(i, ropeSegments[i].transform.position);
         }
 
+    }
+
+    void UpdateGlobaDist()
+    {
+        firstSegment.GetComponent<DistanceJoint2D>().distance = (ropeSegments.Count * ropeSegmentLength) + ropeElasticityLength;
     }
 
 }
