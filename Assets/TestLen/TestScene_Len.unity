@@ -540,6 +540,38 @@ Transform:
   m_Father: {fileID: 1142448786}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &216620556
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 216620557}
+  m_Layer: 0
+  m_Name: Yoyo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &216620557
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216620556}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2116844307}
+  - {fileID: 865067830}
+  m_Father: {fileID: 920410833}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &255336609
 GameObject:
   m_ObjectHideFlags: 0
@@ -1226,7 +1258,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 790134554}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -3.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1316,8 +1348,8 @@ Transform:
   m_Children:
   - {fileID: 333027378}
   - {fileID: 60843704}
-  m_Father: {fileID: 920410833}
-  m_RootOrder: 2
+  m_Father: {fileID: 216620557}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &865067831
 MonoBehaviour:
@@ -1559,8 +1591,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1877528008}
-  - {fileID: 2116844307}
-  - {fileID: 865067830}
+  - {fileID: 216620557}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1591,7 +1622,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2116844309}
+      - m_Target: {fileID: 1315469095}
         m_TargetAssemblyTypeName: SC_Yoyo_Len, Assembly-CSharp
         m_MethodName: OnAddRope
         m_Mode: 0
@@ -1607,7 +1638,7 @@ MonoBehaviour:
     m_ActionName: Player/AddRopeSegment[/Keyboard/2]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2116844309}
+      - m_Target: {fileID: 1315469095}
         m_TargetAssemblyTypeName: SC_Yoyo_Len, Assembly-CSharp
         m_MethodName: OnBringBackYoyo
         m_Mode: 0
@@ -1623,9 +1654,9 @@ MonoBehaviour:
     m_ActionName: Player/RemoveRopeSegment[/Keyboard/1]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2116844309}
+      - m_Target: {fileID: 1315469095}
         m_TargetAssemblyTypeName: SC_Yoyo_Len, Assembly-CSharp
-        m_MethodName: OnBringBackYoyo
+        m_MethodName: OnYoyoAction
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2041,6 +2072,7 @@ GameObject:
   - component: {fileID: 1315469093}
   - component: {fileID: 1315469092}
   - component: {fileID: 1315469094}
+  - component: {fileID: 1315469095}
   m_Layer: 7
   m_Name: Hand
   m_TagString: Untagged
@@ -2060,10 +2092,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.0001
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_AngularDrag: 0
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -2076,7 +2108,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1315469091}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.6, y: 0, z: 0}
   m_LocalScale: {x: 0.26, y: 0.26, z: 0.26}
   m_Children: []
@@ -2134,6 +2166,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1315469095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315469091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71bb22aabcf010c46ba20b9813e2aafb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scYoyoRope: {fileID: 865067831}
+  rbYoyoWeight: {fileID: 2116844304}
+  curYoyoState: 0
 --- !u!1 &1541837278
 GameObject:
   m_ObjectHideFlags: 0
@@ -3007,10 +3054,9 @@ GameObject:
   - component: {fileID: 2116844306}
   - component: {fileID: 2116844304}
   - component: {fileID: 2116844305}
-  - component: {fileID: 2116844309}
   - component: {fileID: 2116844308}
   m_Layer: 8
-  m_Name: Yoyo
+  m_Name: Weight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3112,11 +3158,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116844303}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.6, y: 0, z: 0}
+  m_LocalPosition: {x: 0.60000014, y: 0, z: 0}
   m_LocalScale: {x: 0.26, y: 0.26, z: 0.26}
   m_Children: []
-  m_Father: {fileID: 920410833}
-  m_RootOrder: 1
+  m_Father: {fileID: 216620557}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!255 &2116844308
 FixedJoint2D:
@@ -3136,20 +3182,6 @@ FixedJoint2D:
   m_ConnectedAnchor: {x: 0, y: 0}
   m_DampingRatio: 0
   m_Frequency: 0
---- !u!114 &2116844309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2116844303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71bb22aabcf010c46ba20b9813e2aafb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scYoyoRope: {fileID: 865067831}
-  curYoyoState: 0
 --- !u!1 &2134507782
 GameObject:
   m_ObjectHideFlags: 0
