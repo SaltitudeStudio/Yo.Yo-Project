@@ -1593,7 +1593,7 @@ Transform:
   - {fileID: 1877528008}
   - {fileID: 216620557}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &920410834
 MonoBehaviour:
@@ -1987,7 +1987,7 @@ Transform:
   - {fileID: 200327770}
   - {fileID: 255336610}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1286826903
 GameObject:
@@ -2273,7 +2273,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!120 &1602689673
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -2408,7 +2408,7 @@ Transform:
   - {fileID: 2140525105}
   - {fileID: 1136969849}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1602689676
 MonoBehaviour:
@@ -2457,8 +2457,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SC_YoyoRope_Len, Assembly-CSharp
+      - m_Target: {fileID: 1602689676}
+        m_TargetAssemblyTypeName: SC_YoyoRopeTest_Len, Assembly-CSharp
         m_MethodName: AddRopeSegment
         m_Mode: 1
         m_Arguments:
@@ -2473,8 +2473,8 @@ MonoBehaviour:
     m_ActionName: Player/AddRopeSegment[/Keyboard/numpadPlus]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SC_YoyoRope_Len, Assembly-CSharp
+      - m_Target: {fileID: 1602689676}
+        m_TargetAssemblyTypeName: SC_YoyoRopeTest_Len, Assembly-CSharp
         m_MethodName: RemoveRopeSegment
         m_Mode: 1
         m_Arguments:

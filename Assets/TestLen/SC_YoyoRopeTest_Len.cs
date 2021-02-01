@@ -42,7 +42,7 @@ public class SC_YoyoRopeTest_Len : MonoBehaviour
         UpdateLineRenderer();
     }
 
-    public bool AddRopeSegment()
+    public void AddRopeSegment()
     {
 
         Debug.Log("AddRopeSegment");
@@ -97,17 +97,13 @@ public class SC_YoyoRopeTest_Len : MonoBehaviour
 
             for (int j = 0; j < ropeSegments.Count; j++)
                 if (j > 0)
-                    ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();
+                    ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();          
 
-            return true;
-
-        }
-
-        return false;
+        }    
 
     }
 
-    public bool RemoveRopeSegment()
+    public void RemoveRopeSegment()
     {
 
         Debug.Log("RemoveRopeSegment");
@@ -131,15 +127,11 @@ public class SC_YoyoRopeTest_Len : MonoBehaviour
 
                     Destroy(_segmentToRemove);
 
-                    return true;
-
                 }
 
             }
 
         }
-
-        return false;
 
     }
 
