@@ -2,6 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+///                         SCRIPT DES CONTROLES DU PERSONNAGE ET GESTION DES ACTIONS
+/// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 public class PlayerController_ebo : MonoBehaviour
 {
     Player_Gameplay_Controls player_Controls = null; //Schema contenant les controles du joueur
@@ -42,9 +51,9 @@ public class PlayerController_ebo : MonoBehaviour
     bool isJumping = false;
 
 
-    
-
-
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// /////////////////////////////////////////OLD//CODE//////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     [Header("Les Trucs pas utilisés")]
     [SerializeField] float moveMultiplierForce = 0; //Multiplicateur de force
@@ -53,10 +62,35 @@ public class PlayerController_ebo : MonoBehaviour
     [SerializeField] AnimationCurve curveMoveGroundForce = null;
     [SerializeField] bool ModeVelocityOrForce = true;
 
-    
-    
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ///////////////////////////////////////ZONE D'EXPRESSION LIBRE//////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// 
+    /// Coucou Tienou, j'ai bougé pas mal de trucs dans le script, je 'ai essayé de faire des déplacements
+    /// avec un petit caractère, du coup j'ai essayé avec des courbes et du coup avec la vélocité (tu verras plus bas)
+    /// 
+    /// Forcément ça perd en réalisme, mais le côté arcade peut être marrant.
+    /// 
+    /// J'ai également taillé une première version de la corner correction avec ses pitis raycasts et mis un buffer pour le jump
+    /// 
+    /// J'ai au passage ajouté le package cinemachine pour nous faire gagner du temps plus tard
+    /// C'est règlé à l'arrache ça par contre, je te préviens.
+    /// 
+    /// Des bisouxxx <3 
+    ///
+    /// Cycy
+    /// 
+    /// PS : J'ai laissé presque tout le code que j'ai pas utilisé en commentaire. A toi de voir si tu veux le nettoyer ou le garder plus longtemps
+    /// just in case.
+    /// 
+    /// Cycy.Rigidbody.sleepMode = true;
+    /// break;
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    
+
+
+
 
     private void Awake()
     {
@@ -83,7 +117,7 @@ public class PlayerController_ebo : MonoBehaviour
     }
 
     private void MovePlayer(float value)
-    {/*
+    {/* CODE MIS EN RESERVE
         float valueWithCurve = ModeVelocityOrForce ? curveMoveGround.Evaluate(value) : curveMoveGroundForce.Evaluate(value);
         if (ModeVelocityOrForce) playerRigidBody.velocity = new Vector2(value * moveMultiplierVelocity * valueWithCurve, playerRigidBody.velocity.y); //MODE VELOCITY
         else playerRigidBody.AddForce( new Vector2 (value * moveMultiplierForce * valueWithCurve, 0), ForceMode2D.Force); //MODE FORCE
@@ -161,7 +195,7 @@ public class PlayerController_ebo : MonoBehaviour
         {
             _counter += Time.deltaTime;
             yield return new WaitForFixedUpdate();
-            ///// on annule la velocité verticale présente
+            ///// on annule la velocité verticale présente ======> /!\/!\/!\/!\/!\ Mais ca cause des comportements saccadés contre les bords de plateformes.
             Vector2 vertiVelo = playerRigidBody.velocity;
 
             vertiVelo.y = 0;
@@ -195,12 +229,13 @@ public class PlayerController_ebo : MonoBehaviour
             StartCoroutine(Jumping(0));
         }
         else
-            StartCoroutine(BufferingJump(0.15f));
+            StartCoroutine(BufferingJump(0.20f));
 
             
         //else Debug.Log("Can't Jump");
     }
 
+    //fonctionne pas encore parfaitement puisqu'il faudrait vérifier si la coro est déjà lancée et l'arrêter/relancer dans ce cas.
     IEnumerator BufferingJump(float _bufferLengthMemory)
     {
         float _counter = 0;
@@ -209,6 +244,7 @@ public class PlayerController_ebo : MonoBehaviour
 
         while(_counter <= _bufferLengthMemory)
         {
+            _counter += Time.deltaTime;
             yield return null;
         }
         jumpBuffered = false;
@@ -255,7 +291,8 @@ public class PlayerController_ebo : MonoBehaviour
 
     // En vrai la methode du raycast est top pour les détection de hauteur, mais pour le isgrounded il vaut mieux un trigger, sinon quand on a que 1 pied sur la plateforme on est bloqué =/ 
     // oups déso j'avais dit de la merde =x
-    /*
+
+    /*  CODE MIS EN RESERVE
         private bool IsGrounded()
     {
         int layerMask = 1 << 10;
