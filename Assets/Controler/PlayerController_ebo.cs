@@ -13,7 +13,7 @@ public class PlayerController_ebo : MonoBehaviour
     [SerializeField] AnimationCurve curveMoveGround = null;
     [SerializeField] AnimationCurve curveMoveGroundForce = null;
     [SerializeField] bool ModeVelocityOrForce = true;
-    float velocity = 0; //Velocité du joueur
+    float joysticeValue = 0; //Velocité du joueur
     float distToGround = 1.5f;
 
     private void Awake()
@@ -33,8 +33,8 @@ public class PlayerController_ebo : MonoBehaviour
     void CreateControls()
     {
         //----- MOVE
-        player_Controls.Ground.move.performed += context => velocity = context.ReadValue<float>(); //Quand le stick de gauche bouge, modifie velocity [-1,1]
-        player_Controls.Ground.move.canceled += context => StopPlayer(); //Quand le stick est relaché, remet velocity à 0
+        player_Controls.Ground.move.performed += context => joysticeValue = context.ReadValue<float>(); //Quand le stick de gauche bouge, modifie velocity [-1,1]
+        //player_Controls.Ground.move.canceled += context => StopPlayer(); //Quand le stick est relaché, remet velocity à 0
 
         //---- JUMP
         player_Controls.Ground.jump.performed += context => JumpPlayer();
@@ -43,16 +43,13 @@ public class PlayerController_ebo : MonoBehaviour
     private void MovePlayer(float value)
     {
         float valueWithCurve = ModeVelocityOrForce ? curveMoveGround.Evaluate(value) : curveMoveGroundForce.Evaluate(value);
-        Debug.Log(valueWithCurve);
-        //if (!IsGrounded()) valueWithCurve *= valueWithCurve * 0.75f;
-        if (ModeVelocityOrForce) playerRigidBody.velocity = new Vector2(value * moveMultiplierVelocity * valueWithCurve, playerRigidBody.velocity.y); //Ajoute de la force en fonction du sens
-        else playerRigidBody.AddForce( new Vector2 (value * moveMultiplierForce * valueWithCurve, 0), ForceMode2D.Force); //Ajoute de la force en fonction du sens
+        if (ModeVelocityOrForce) playerRigidBody.velocity = new Vector2(value * moveMultiplierVelocity * valueWithCurve, playerRigidBody.velocity.y); //MODE VELOCITY
+        else playerRigidBody.AddForce( new Vector2 (value * moveMultiplierForce * valueWithCurve, 0), ForceMode2D.Force); //MODE FORCE
     }
     private void StopPlayer()
     {
         Debug.Log("Stop Player");
         playerRigidBody.velocity = new Vector2(0, playerRigidBody.velocity.y);
-        //velocity = 0;
     }
 
     private void JumpPlayer()
@@ -85,10 +82,10 @@ public class PlayerController_ebo : MonoBehaviour
     //---------------------------------- UPDATE ------------------------------------------
     void Update()
     {
-        if (velocity != 0f)
+        if (joysticeValue != 0f)
         {
-            if (IsGrounded()) MovePlayer(velocity);
-            else MovePlayer(velocity / 4f);
+            if (IsGrounded()) MovePlayer(joysticeValue);
+            else MovePlayer(joysticeValue / 4f);
         }
         //else
         //{
