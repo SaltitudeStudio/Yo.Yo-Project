@@ -71,7 +71,17 @@ public class SC_YoyoRope_Len : MonoBehaviour
         }
     }
 
-    //public bool 
+    public bool canAddNewSegment()
+    {
+
+        Vector2 distBetween2LastSegment = ropeSegments[ropeSegments.Count - 2].transform.position - lastSegment.transform.position;
+
+        if (distBetween2LastSegment.magnitude > ropeSegmentLength * 0.75f)
+            return true;
+        else
+            return false;
+
+    }
 
     public void AddRopeSegment()
     {

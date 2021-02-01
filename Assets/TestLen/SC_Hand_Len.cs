@@ -81,7 +81,8 @@ public class SC_Hand_Len : MonoBehaviour
     {
         while (!scYoyoRope.IsRopeAtMaxLength())
         {
-            scYoyoRope.AddRopeSegment();
+            if (scYoyoRope.canAddNewSegment())
+                scYoyoRope.AddRopeSegment();
             yield return null;
         }
         curYoyoState = YoyoState.Away;
@@ -119,7 +120,7 @@ public class SC_Hand_Len : MonoBehaviour
     }
 
     IEnumerator BringBackYoyo()
-    {   
+    {
         while (!scYoyoRope.IsRopeAtMinLength())
         {
             scYoyoRope.RemoveRopeSegment();
@@ -139,9 +140,9 @@ public class SC_Hand_Len : MonoBehaviour
         if (Context.performed)
         {
 
-            Debug.Log("OnPerformed");
+            //Debug.Log("OnPerformed");
 
-            if(curAddRopeCoro != null)
+            if (curAddRopeCoro != null)
                 StopCoroutine(curAddRopeCoro);
 
             curAddRopeCoro = StartCoroutine(AddRope());
@@ -150,7 +151,8 @@ public class SC_Hand_Len : MonoBehaviour
 
         if (Context.canceled)
         {
-            Debug.Log("OnCanceled");
+
+            //Debug.Log("OnCanceled");
 
             if (curAddRopeCoro != null)
                 StopCoroutine(curAddRopeCoro);
