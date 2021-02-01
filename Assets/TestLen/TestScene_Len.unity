@@ -2178,6 +2178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bb22aabcf010c46ba20b9813e2aafb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  throwForce: 10
   scYoyoRope: {fileID: 865067831}
   rbYoyoWeight: {fileID: 2116844304}
   curYoyoState: 0
@@ -2264,15 +2265,15 @@ GameObject:
   - component: {fileID: 1602689675}
   - component: {fileID: 1602689674}
   - component: {fileID: 1602689673}
-  - component: {fileID: 1602689676}
   - component: {fileID: 1602689677}
+  - component: {fileID: 1602689676}
   m_Layer: 0
   m_Name: LenRope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!120 &1602689673
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -2418,7 +2419,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1602689672}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d01d3907871da2243a1816ca28a6600f, type: 3}
+  m_Script: {fileID: 11500000, guid: 629a70c26d6c6704488482dcff5047f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxRopeLength: 50
@@ -2456,7 +2457,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1602689676}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SC_YoyoRope_Len, Assembly-CSharp
         m_MethodName: AddRopeSegment
         m_Mode: 1
@@ -2472,7 +2473,7 @@ MonoBehaviour:
     m_ActionName: Player/AddRopeSegment[/Keyboard/numpadPlus]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1602689676}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SC_YoyoRope_Len, Assembly-CSharp
         m_MethodName: RemoveRopeSegment
         m_Mode: 1
@@ -2486,6 +2487,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 4761a842-4ce7-4a42-bd70-831a0d7f68bd
     m_ActionName: Player/RemoveRopeSegment[/Keyboard/minus]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 33d15a56-e5db-48ad-af77-438be184e29a
+    m_ActionName: Player/YoyoAction
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
