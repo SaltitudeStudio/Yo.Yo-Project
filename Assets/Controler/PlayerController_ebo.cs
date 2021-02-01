@@ -9,14 +9,26 @@ public class PlayerController_ebo : MonoBehaviour
 
     [Header("Les Trucs utilisés")]
 
-    [SerializeField] float moveMultiplierVelocity = 0;
-    [SerializeField] float jumpMultiplierVelocity = 5;
     [SerializeField] AnimationCurve curveMoveGround = null;
-    //qui gère aussi pour l'instant la vitesse de transistion de 'lacceleration
-    [SerializeField] float BrakeSpeed = 50;
+    [SerializeField] float moveMultiplierVelocity = 0;
+
+    [SerializeField] float AccelSpeed = 50;
+    [SerializeField] float BrakeSpeed = 15;
 
     //curve de velocité(y) de saut(y) par rapport au temps(x)
     [SerializeField] AnimationCurve curveJumpVelocity = null;
+    [SerializeField] float jumpMultiplierVelocity = 5;
+
+    [Header("Checks de corners")]
+    [SerializeField] Transform feetCheck_l;
+    [SerializeField] Transform kneeCheck_l;
+    [SerializeField] Transform feetCheck_r;
+    [SerializeField] Transform kneeCheck_r;
+    //valeur de boost en velocité en y pour permettre le passage si les pieds butent dans une plateforme
+    float velocity_Y_boost = 0;
+    Coroutine boostCoro;
+    bool goBoost = false;
+
 
 
     float joysticeValue = 0; //Velocité du joueur
@@ -26,6 +38,8 @@ public class PlayerController_ebo : MonoBehaviour
     bool isJumping = false;
 
 
+    //JumpBuffer
+    bool jumpBuffered = false;
 
 
 
@@ -73,27 +87,101 @@ public class PlayerController_ebo : MonoBehaviour
         
      */
 
-        //playerRigidBody.AddForce(new Vector2(value * moveMultiplierForce, 0), ForceMode2D.Force);
 
         //--------------------------------------------------------------------------------------------------------------------
-        //Finalement on va faire avec la velocité parce que pour le faire avec une courbe ca a plus de sens avec la velocité
+        //Finalement j'ai fait déplacements et saut avec la velocité pour avoir un controle absolu. C'est un peu plus rigide et en théorie appliquer la courbe avec un addForce serait plus cool/clean
+        //Faire avec la velo est surtout plus rapide et facile pour : la vitesse de chute entièrement maîtrisée et pareil pour le freinage, qui demandent autrement des applications de forces supplémentaires
+        // et potentiellement compliquées à régler.
         //--------------------------------------------------------------------------------------------------------------------
 
         Vector2 lateralVelo = playerRigidBody.velocity;
 
-        lateralVelo.x = Mathf.Lerp(lateralVelo.x, Mathf.Sign(value)*curveMoveGround.Evaluate(Mathf.Abs(value))*moveMultiplierVelocity, Time.deltaTime * BrakeSpeed);
+        lateralVelo.x = Mathf.Lerp(lateralVelo.x, Mathf.Sign(value)*curveMoveGround.Evaluate(Mathf.Abs(value))*moveMultiplierVelocity, Time.deltaTime * AccelSpeed);
         playerRigidBody.velocity = lateralVelo;
 
+        
+        //Ici on va gérer la corner correction, permettant un petit step-up en cas de prise des pieds dans la plateforme.
+
+        Vector2 _dir;
+        Transform _feetCheck;
+        Transform _kneeCheck;
+
+        //on établie quels points de départ et direction de raycast utiliser
+        _dir = (value > 0) ? Vector2.right : Vector2.left;
+        _feetCheck = (value>0)? feetCheck_r : feetCheck_l;
+        _kneeCheck = (value>0)? kneeCheck_r : kneeCheck_l;
+
+
+        //si les pieds sont bloqués mais pas les genoux on booste
+        if (LateralRaycastCheck(_feetCheck, _dir) == true && LateralRaycastCheck(_kneeCheck, _dir) == false)
+        {
+            goBoost = true;
+            if (boostCoro == null)
+                StartCoroutine(VerticalBoosting(0.1f, 1));
+        }
+        else
+            goBoost = false;
+
+
+
     }
+
+    //fonction pour les checks raycast
+    bool LateralRaycastCheck(Transform _startPoint, Vector2 _dir)
+    {
+        int layerMask = 1 << 10;
+        RaycastHit2D _hit = Physics2D.Raycast(_startPoint.position, _dir, 0.3f, layerMask);
+        
+        if (_hit.collider != null)
+        {
+            Debug.DrawRay(_startPoint.position, _dir * 1, Color.red,1) ;
+
+            return true;
+        }
+        else
+        {
+            Debug.DrawRay(_startPoint.position, _dir * 1, Color.green);
+            return false;
+        }
+
+    }
+
+    //La corner correction, pas encore smooth du tout dans les escaliers x]
+    IEnumerator VerticalBoosting(float _duration, float _boostVelocityStrength)
+    {
+        float _counter = 0;
+
+        Debug.Log("boost");
+
+        //la duration est là par sécurité pour éviter de partir dans l'espace parce qu'on a rrêté d'avancé devant une marche d'escalier
+        while (goBoost && _counter <= _duration)
+        {
+            _counter += Time.deltaTime;
+            yield return new WaitForFixedUpdate();
+            ///// on annule la velocité verticale présente
+            Vector2 vertiVelo = playerRigidBody.velocity;
+
+            vertiVelo.y = 0;
+            playerRigidBody.velocity = vertiVelo;
+            /////
+            playerRigidBody.AddForce(Vector2.up * 550, ForceMode2D.Force);
+        }
+
+        boostCoro = null;
+    }
+
+
     private void StopPlayer()
     {
 
         //Debug.Log("Stop Player");
         Vector2 lateralVelo = playerRigidBody.velocity;
 
-        lateralVelo.x = Mathf.Lerp(lateralVelo.x, 0, Time.deltaTime * BrakeSpeed);
+        lateralVelo.x = Mathf.Lerp(lateralVelo.x, 0, Time.deltaTime * (BrakeSpeed/5));
         playerRigidBody.velocity = lateralVelo;
     }
+
+    
 
     private void JumpPlayer()
     {
@@ -103,12 +191,30 @@ public class PlayerController_ebo : MonoBehaviour
 
             StartCoroutine(Jumping(0));
         }
+        else
+            StartCoroutine(BufferingJump(0.3f));
+
             
-        else Debug.Log("Can't Jump");
+        //else Debug.Log("Can't Jump");
+    }
+
+    IEnumerator BufferingJump(float bufferLengthMemory)
+    {
+        float _counter = 0;
+
+        jumpBuffered = true;
+
+        while(_counter <= bufferLengthMemory)
+        {
+            yield return null;
+        }
+        jumpBuffered = false;
     }
 
 
-    //NE GERE PAS ENCORE LA VELOCITE QUAND LE JOUEUR TOMBE SANS AVOIR SAUTE!
+    //------------------------------------------------------------------
+    // J'ai tenté un saut un peu particulier puisque le personnage retombe plus vite qu'il ne monte, un peu à la mario. L'application du truc est pas encore fou
+    //------------------------------------------------------------------
     IEnumerator Jumping(float startCounterValue)
     {
         isJumping = true;
@@ -117,17 +223,23 @@ public class PlayerController_ebo : MonoBehaviour
 
         Vector2 verticalVelo;
 
-        //cette valeur de condition devrait ^^etre récupérée de la position de la clé de al courbe ou qqchose comme ça et sert à ignorer le raycast de isGrounded le temps de décoler ==> il faudra aussi
-        //réduire la longueur du raycast pour moins d'emmerdes
-        while(_counter < 0.3f || !isGrounded_b && _counter <= curveJumpVelocity.length)
+        //cette valeur de condition devrait être récupérée de la position de la clé de la courbe ou qqchose comme ça et sert à ignorer le raycast de isGrounded le temps de décoler
+        //On arrête d'appliquer une velocité si on est en situation de boost vertical pour *corner correction*
+        while(_counter < 0.3f || !isGrounded_b && _counter <= curveJumpVelocity.length )
         {
-            _counter += Time.deltaTime;
+            if (!goBoost)
+            {
+                _counter += Time.deltaTime;
 
-            verticalVelo = playerRigidBody.velocity;
-            Debug.Log(curveJumpVelocity.Evaluate(_counter));
-            verticalVelo.y = curveJumpVelocity.Evaluate(_counter) * jumpMultiplierVelocity;
+                verticalVelo = playerRigidBody.velocity;
+                //Debug.Log(curveJumpVelocity.Evaluate(_counter));
+                //On règle la velocité suivant la position sur la courbe en fonction du temps
+                verticalVelo.y = curveJumpVelocity.Evaluate(_counter) * jumpMultiplierVelocity;
 
-            playerRigidBody.velocity = verticalVelo;
+                playerRigidBody.velocity = verticalVelo;
+
+            }
+            
 
            yield return null;
 
@@ -138,7 +250,8 @@ public class PlayerController_ebo : MonoBehaviour
     }
 
 
-    // En vrai la methode du raycast est top pour les détection de hauteur, mais pour le isgrounded il vaut mieux un trigger, sinon quand on a que 1 pied sur la plateforme on est bloqué =/ oups =x
+    // En vrai la methode du raycast est top pour les détection de hauteur, mais pour le isgrounded il vaut mieux un trigger, sinon quand on a que 1 pied sur la plateforme on est bloqué =/ 
+    // oups déso j'avais dit de la merde =x
     /*
         private bool IsGrounded()
     {
@@ -163,7 +276,13 @@ public class PlayerController_ebo : MonoBehaviour
     private void OnTriggerStay2D(Collider2D other)
     {
         isGrounded_b = true;
-        Debug.Log("isGrounded_b true");
+        //Debug.Log("isGrounded_b true");
+
+        if (jumpBuffered)
+        {
+            JumpPlayer();
+            jumpBuffered = false;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -189,7 +308,7 @@ public class PlayerController_ebo : MonoBehaviour
             if (isGrounded_b) 
                 MovePlayer(joysticeValue);
             else 
-                MovePlayer(joysticeValue / 4f);
+                MovePlayer(joysticeValue / 2f);
         }
 
         else if (joysticeValue == 0f && isGrounded_b)
