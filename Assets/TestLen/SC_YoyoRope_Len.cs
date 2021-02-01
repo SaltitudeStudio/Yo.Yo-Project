@@ -11,19 +11,28 @@ public class SC_YoyoRope_Len : MonoBehaviour
     int maxRopeLength = 50;
     private int minRopeLength = 2;
     [SerializeField]
-    float ropeElasticityLength = 0.1f;
-    [SerializeField]
     float ropeSegmentLength = 0.1f;
     [SerializeField]
-    float ropeSegmentMass = 0.1f;
-    [SerializeField]
     float ropeSegmentRadius = 0.04f;
+    [SerializeField]
+    float ropeSegmentMass = 0.1f;
+    private float curSegmentMass = 0;
+    [SerializeField]
+    float ropeGravityScale = 1f;
+    private float curGravityScale = 0;
 
     [Header("Rope References")]
+    [SerializeField]
+    GameObject ropeContainer;
+    [SerializeField]
+    LineRenderer ropeRenderer;
     [SerializeField]
     GameObject firstSegment;
     [SerializeField]
     GameObject lastSegment;
+
+    [Header("Public References (Needed by 'Hand')")]
+    public Rigidbody2D rbYoyoWeight;
 
     [Header("Debug DO NOT TOUCH")]
     [SerializeField]
@@ -32,9 +41,15 @@ public class SC_YoyoRope_Len : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        //Ajout des segments principaux a la liste
         ropeSegments.Add(firstSegment);
         ropeSegments.Add(lastSegment);
-        //UpdateGlobaDist();
+
+        //Init de ces vars
+        curSegmentMass = ropeSegmentMass;
+        curGravityScale = ropeGravityScale;
+
     }
 
     // Update is called once per frame
@@ -46,14 +61,12 @@ public class SC_YoyoRope_Len : MonoBehaviour
     public void UpdateLineRenderer()
     {
 
-        LineRenderer lineRender = GetComponent<LineRenderer>();
+        //Le nombre de points du renderer s'aligne sur la longueur de la corde
+        ropeRenderer.positionCount = ropeSegments.Count;
 
-        lineRender.positionCount = ropeSegments.Count;
-
+        //les positions s'aligne
         for (int i = 0; i < ropeSegments.Count; i++)
-        {
-            lineRender.SetPosition(i, ropeSegments[i].transform.position);
-        }
+            ropeRenderer.SetPosition(i, ropeSegments[i].transform.position);
 
     }
 
@@ -61,46 +74,50 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
     public bool IsRopeAtMaxLength()
     {
+        //retourne vrai si la corde a atteind sa longueur maximale
         if (ropeSegments.Count < maxRopeLength)
-        {
             return false;
-        }
         else
-        {
-            Debug.Log("MaxLength");
             return true;
-        }
     }
 
     public bool canAddNewSegment()
     {
 
+        //distance entre les deux dernier segment du tableau (le dernier est a la même position que le poid du yoyo)
         Vector2 distBetween2LastSegment = ropeSegments[ropeSegments.Count - 2].transform.position - lastSegment.transform.position;
 
-        if (distBetween2LastSegment.magnitude > ropeSegmentLength * 0.75f)
+        //si cette distance est superieur a la moitier de la longueur d'un segment autorise l'allongement de la corde
+        if (distBetween2LastSegment.magnitude > ropeSegmentLength * 0.5f)
             return true;
         else
             return false;
 
     }
 
+    public int segmentQuantityToAdd(Vector2 velocity)
+    {
+        //Calcule la quantité de segment a ajouter pour correspondra a la distance parcourue par le poids du yoyo (en une frame)
+        int nQuantity = Mathf.CeilToInt((velocity.magnitude * Time.deltaTime) / ropeSegmentLength);
+        return nQuantity;
+    }
+
     public void AddRopeSegment(int nSegmentToCreate)
     {
 
-        //Debug.Log("AddRopeSegment");
-
+        //Créé X Segments
         for (int i = 0; i < nSegmentToCreate; i++)
         {
 
+            //Ne crée pas de segments si la longueur max de la corde est atteinte
             if (ropeSegments.Count < maxRopeLength)
             {
 
                 //Creation du segment de rope
                 GameObject _newSegment = new GameObject("Segment_" + ropeSegments.Count.ToString());
-                //spawn a une position plus cool pour la physique
-                _newSegment.transform.position = lastSegment.transform.position;
-                _newSegment.transform.parent = this.transform;
-                _newSegment.layer = 9;
+                _newSegment.transform.position = lastSegment.transform.position; //spawn a une position plus cool pour la physique
+                _newSegment.transform.parent = ropeContainer.transform; //set le parent dans la scene
+                _newSegment.layer = 9; //set la layer pour les collisions
 
                 //Insertion du segment  dans la Liste a l'avant derniere position (derniere pos = Last Segment)
                 for (int j = 0; j < ropeSegments.Count; j++)
@@ -114,16 +131,12 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
                 //Physics
                 Rigidbody2D _curSegmentRb = _newSegment.AddComponent<Rigidbody2D>();
-                _curSegmentRb.mass = ropeSegmentMass;
+                _curSegmentRb.mass = curSegmentMass;
+                _curSegmentRb.gravityScale = curGravityScale;
 
                 //Collisions
                 CircleCollider2D _curSegmentCol = _newSegment.AddComponent<CircleCollider2D>();
                 _curSegmentCol.radius = ropeSegmentRadius;
-
-                // How To Switch Dist/Hinge : 
-                // Garde que le paragraphe voulu ci-dessous
-                // Remplacer le type de connected body ci-ci-dessous
-                // Activer le component correspondant sur LastSegment et desactiver l'autre
 
                 //DistantJoint2D
                 DistanceJoint2D _curSegmentJoint = _newSegment.AddComponent<DistanceJoint2D>();
@@ -131,14 +144,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
                 _curSegmentJoint.distance = ropeSegmentLength;
                 _curSegmentJoint.maxDistanceOnly = true;
 
-                /*
-                // HingeJoint2D
-                HingeJoint2D _curSegmentJoint = _newSegment.AddComponent<HingeJoint2D>();
-                _curSegmentJoint.autoConfigureConnectedAnchor = false;
-                _curSegmentJoint.connectedAnchor = new Vector2(0, -ropeSegmentLength);
-                */
-
-                //Refait la corde de joint
+                //Re Set les Connected Rigidbody
                 for (int j = 0; j < ropeSegments.Count; j++)
                     if (j > 0)
                         ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();
@@ -153,13 +159,12 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
     #region Rope Narrowing Functions
 
+
     public bool IsRopeAtMinLength()
     {
+        //retourne vrai si la corde a atteind sa longueur minimale
         if (ropeSegments.Count == 2)
-        {
-            Debug.Log("MinLength");
             return true;
-        }
         else
             return false;
     }
@@ -167,28 +172,27 @@ public class SC_YoyoRope_Len : MonoBehaviour
     public void RemoveRopeSegment()
     {
 
-        //Debug.Log("RemoveRopeSegment");
-
+        //Enleve un segment si la cordre et assez longue seulement
         if (ropeSegments.Count > minRopeLength)
         {
 
             for (int i = 0; i < ropeSegments.Count; i++)
             {
 
+                //Si c'est l'avant dernier segment (ne jamais retirer LastSegment)
                 if (ropeSegments[i + 1] == lastSegment)
                 {
 
-                    GameObject _segmentToRemove = ropeSegments[i];
+                    GameObject _segmentToRemove = ropeSegments[i];  //Stock le segment
 
-                    ropeSegments.RemoveAt(i);
+                    ropeSegments.RemoveAt(i); //Retirer le segment de la Liste
 
+                    //Re Set les Connected Rigidbody
                     for (int j = 0; j < ropeSegments.Count; j++)
                         if (j > 0)
                             ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();
 
                     Destroy(_segmentToRemove);
-
-                    //return true;
 
                 }
 
@@ -196,21 +200,43 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
         }
 
-        //return false;
-
     }
 
     #endregion Rope Narrowing Functions
 
-    void UpdateGlobaDist()
+    #region Rope Physics Functions
+
+    public void EnableSegmentPhysics(bool enable)
     {
-        firstSegment.GetComponent<DistanceJoint2D>().distance = (ropeSegments.Count * ropeSegmentLength) + ropeElasticityLength;
+
+        //Change la physique voulue stocké (si jamais des segment sont crée il seront set avec ces parametres)
+        if (enable)
+        {
+            curGravityScale = ropeGravityScale;
+            curSegmentMass = ropeSegmentMass;
+        }
+        else if (!enable)
+        {
+            curGravityScale = 0;
+            curSegmentMass = 0;
+        }
+
+        //Set la physique voulue pour tout les segments
+        for (int i = 0; i < ropeSegments.Count; i++)
+        {
+            ropeSegments[i].GetComponent<Rigidbody2D>().gravityScale = curGravityScale;
+            ropeSegments[i].GetComponent<Rigidbody2D>().mass = curSegmentMass;
+        }
+
     }
+
+    #endregion Rope Physics Functions
 
 }
 
 //Notes
 
+//28/01
 // J'ai ajouté un line render vite fait, mais j'ai surtout testé le distance joint qui reste assez elastique
 // Du coup il y a de l'énergie qui ne se transmet pas et c'est gênant!
 // le spring joint était prometteur au niveau du réalisme, mais l'elasticité est difficile à controler, faudrait plus de test. 

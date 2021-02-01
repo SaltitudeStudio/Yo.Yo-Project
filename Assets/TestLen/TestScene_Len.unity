@@ -239,7 +239,7 @@ FixedJoint2D:
   m_GameObject: {fileID: 60843703}
   m_Enabled: 1
   serializedVersion: 4
-  m_EnableCollision: 0
+  m_EnableCollision: 1
   m_ConnectedRigidBody: {fileID: 2116844304}
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
@@ -319,7 +319,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -549,6 +549,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 216620557}
+  - component: {fileID: 216620558}
   m_Layer: 0
   m_Name: Yoyo
   m_TagString: Untagged
@@ -572,6 +573,29 @@ Transform:
   m_Father: {fileID: 920410833}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &216620558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216620556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d01d3907871da2243a1816ca28a6600f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxRopeLength: 50
+  ropeSegmentLength: 0.1
+  ropeSegmentRadius: 0.04
+  ropeSegmentMass: 0.1
+  ropeGravityScale: 1
+  ropeContainer: {fileID: 865067829}
+  ropeRenderer: {fileID: 865067832}
+  firstSegment: {fileID: 333027374}
+  lastSegment: {fileID: 60843703}
+  rbYoyoWeight: {fileID: 2116844304}
+  ropeSegments: []
 --- !u!1 &255336609
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,7 +773,6 @@ GameObject:
   - component: {fileID: 333027375}
   - component: {fileID: 333027377}
   - component: {fileID: 333027379}
-  - component: {fileID: 333027376}
   m_Layer: 9
   m_Name: First Segment
   m_TagString: Untagged
@@ -769,7 +792,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -778,25 +801,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!232 &333027376
-DistanceJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 333027374}
-  m_Enabled: 0
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 2116844304}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 0
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 0}
-  m_AutoConfigureDistance: 0
-  m_Distance: 1
-  m_MaxDistanceOnly: 0
 --- !u!58 &333027377
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1327,9 +1331,8 @@ GameObject:
   - component: {fileID: 865067830}
   - component: {fileID: 865067833}
   - component: {fileID: 865067832}
-  - component: {fileID: 865067831}
   m_Layer: 0
-  m_Name: YoyoRope
+  m_Name: Rope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1351,26 +1354,6 @@ Transform:
   m_Father: {fileID: 216620557}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &865067831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 865067829}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d01d3907871da2243a1816ca28a6600f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxRopeLength: 50
-  ropeElasticityLength: 1
-  ropeSegmentLength: 0.1
-  ropeSegmentMass: 0.1
-  ropeSegmentRadius: 0.04
-  firstSegment: {fileID: 333027374}
-  lastSegment: {fileID: 60843703}
-  ropeSegments: []
 --- !u!120 &865067832
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -2195,9 +2178,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bb22aabcf010c46ba20b9813e2aafb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwForce: 10
-  scYoyoRope: {fileID: 865067831}
-  rbYoyoWeight: {fileID: 2116844304}
+  throwForce: 15
+  curEquippedYoyo: {fileID: 216620556}
   curYoyoState: 0
 --- !u!255 &1315469096
 FixedJoint2D:
@@ -2209,7 +2191,7 @@ FixedJoint2D:
   m_Enabled: 1
   serializedVersion: 4
   m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 2116844304}
+  m_ConnectedRigidBody: {fileID: 0}
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 0
@@ -3094,7 +3076,6 @@ GameObject:
   - component: {fileID: 2116844306}
   - component: {fileID: 2116844304}
   - component: {fileID: 2116844305}
-  - component: {fileID: 2116844308}
   m_Layer: 8
   m_Name: Weight
   m_TagString: Untagged
@@ -3114,7 +3095,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.5
+  m_Mass: 5
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 1
@@ -3204,24 +3185,6 @@ Transform:
   m_Father: {fileID: 216620557}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!255 &2116844308
-FixedJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2116844303}
-  m_Enabled: 0
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 1315469092}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 0
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 0}
-  m_DampingRatio: 0
-  m_Frequency: 0
 --- !u!1 &2134507782
 GameObject:
   m_ObjectHideFlags: 0
