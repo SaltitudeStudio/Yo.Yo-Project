@@ -7,8 +7,12 @@ public class PlayerController_ebo : MonoBehaviour
     Player_Gameplay_Controls player_Controls = null; //Schema contenant les controles du joueur
     Rigidbody2D playerRigidBody = null; //Rigidbody du player
 
-    [SerializeField] float moveMultiplier = 0; //Multiplicateur de force
+    [SerializeField] float moveMultiplierVelocity = 0; //Multiplicateur de force
+    [SerializeField] float moveMultiplierForce = 0; //Multiplicateur de force
     [SerializeField] float jumpMultiplier = 0; //Multiplicateur de force
+    [SerializeField] AnimationCurve curveMoveGround = null;
+    [SerializeField] AnimationCurve curveMoveGroundForce = null;
+    [SerializeField] bool ModeVelocityOrForce = true;
     float velocity = 0; //Velocité du joueur
     float distToGround = 1.5f;
 
@@ -29,7 +33,7 @@ public class PlayerController_ebo : MonoBehaviour
     void CreateControls()
     {
         //----- MOVE
-        player_Controls.Ground.move.performed += context => velocity = context.ReadValue<float>(); //Quand le stick de gauche bouge, modifie velocity
+        player_Controls.Ground.move.performed += context => velocity = context.ReadValue<float>(); //Quand le stick de gauche bouge, modifie velocity [-1,1]
         player_Controls.Ground.move.canceled += context => StopPlayer(); //Quand le stick est relaché, remet velocity à 0
 
         //---- JUMP
@@ -38,12 +42,17 @@ public class PlayerController_ebo : MonoBehaviour
 
     private void MovePlayer(float value)
     {
-        Debug.Log("Move");
-        playerRigidBody.AddForce(new Vector2(value * moveMultiplier, 0)); //Ajoute de la force en fonction du sesns
+        float valueWithCurve = ModeVelocityOrForce ? curveMoveGround.Evaluate(value) : curveMoveGroundForce.Evaluate(value);
+        Debug.Log(valueWithCurve);
+        //if (!IsGrounded()) valueWithCurve *= valueWithCurve * 0.75f;
+        if (ModeVelocityOrForce) playerRigidBody.velocity = new Vector2(value * moveMultiplierVelocity * valueWithCurve, playerRigidBody.velocity.y); //Ajoute de la force en fonction du sens
+        else playerRigidBody.AddForce( new Vector2 (value * moveMultiplierForce * valueWithCurve, 0), ForceMode2D.Force); //Ajoute de la force en fonction du sens
     }
     private void StopPlayer()
     {
-        velocity = 0;
+        Debug.Log("Stop Player");
+        playerRigidBody.velocity = new Vector2(0, playerRigidBody.velocity.y);
+        //velocity = 0;
     }
 
     private void JumpPlayer()
@@ -78,12 +87,13 @@ public class PlayerController_ebo : MonoBehaviour
     {
         if (velocity != 0f)
         {
-            MovePlayer(velocity);
+            if (IsGrounded()) MovePlayer(velocity);
+            else MovePlayer(velocity / 4f);
         }
-        else
-        {
-            StopPlayer();
-        }
+        //else
+        //{
+        //    StopPlayer();
+        //}
     }
     private void FixedUpdate()
     {

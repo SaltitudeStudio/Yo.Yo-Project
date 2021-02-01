@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/TEST_Etienne/Player_Gameplay_Controls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Controler/Player_Gameplay_Controls.inputactions'
 
 using System;
 using System.Collections;
@@ -106,6 +106,17 @@ public class @Player_Gameplay_Controls : IInputActionCollection, IDisposable
                     ""name"": """",
                     ""id"": ""6e04e28f-b5ca-4629-883b-21184c19b2b7"",
                     ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""93d5bf9c-6fcc-4aca-879c-c6eca5b2453b"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
