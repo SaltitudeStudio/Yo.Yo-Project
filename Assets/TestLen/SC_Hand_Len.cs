@@ -11,6 +11,7 @@ public class SC_Hand_Len : MonoBehaviour
     Coroutine curBringBackCoro;
     [SerializeField]
     float throwForce = 10;
+    private FixedJoint2D handToYoyoJoint;
 
     [Header("Yoyo References")]
     [SerializeField]
@@ -22,6 +23,11 @@ public class SC_Hand_Len : MonoBehaviour
     [SerializeField]
     YoyoState curYoyoState;
     Coroutine curAddRopeCoro;
+
+    private void Start()
+    {
+        handToYoyoJoint = this.GetComponent<FixedJoint2D>();
+    }
 
     public void OnYoyoAction(InputAction.CallbackContext Context)
     {
@@ -53,6 +59,7 @@ public class SC_Hand_Len : MonoBehaviour
 
         if (Context.performed)
         {
+            handToYoyoJoint.enabled = false;
             curThrowCoro = StartCoroutine(ThrowYoyo());
             rbYoyoWeight.AddForce(GetThrow());
             curYoyoState = YoyoState.Thrown;
@@ -77,17 +84,17 @@ public class SC_Hand_Len : MonoBehaviour
             scYoyoRope.AddRopeSegment();
             yield return null;
         }
+        curYoyoState = YoyoState.Away;
     }
 
     void StopYoyoThrow(InputAction.CallbackContext Context)
     {
-
         if (Context.performed)
         {
-            StopCoroutine(curThrowCoro);
+            if (curThrowCoro != null)
+                StopCoroutine(curThrowCoro);
             curYoyoState = YoyoState.Away;
         }
-
     }
 
     public void OnBringBackYoyo(InputAction.CallbackContext Context)
@@ -112,12 +119,15 @@ public class SC_Hand_Len : MonoBehaviour
     }
 
     IEnumerator BringBackYoyo()
-    {
+    {   
         while (!scYoyoRope.IsRopeAtMinLength())
         {
             scYoyoRope.RemoveRopeSegment();
             yield return null;
         }
+
+        curYoyoState = YoyoState.InHand;
+        handToYoyoJoint.enabled = true;
 
     }
 

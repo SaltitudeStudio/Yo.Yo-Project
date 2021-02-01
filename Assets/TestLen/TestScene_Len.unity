@@ -2073,6 +2073,7 @@ GameObject:
   - component: {fileID: 1315469092}
   - component: {fileID: 1315469094}
   - component: {fileID: 1315469095}
+  - component: {fileID: 1315469096}
   m_Layer: 7
   m_Name: Hand
   m_TagString: Untagged
@@ -2178,10 +2179,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bb22aabcf010c46ba20b9813e2aafb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwForce: 10
+  throwForce: 500
   scYoyoRope: {fileID: 865067831}
   rbYoyoWeight: {fileID: 2116844304}
   curYoyoState: 0
+--- !u!255 &1315469096
+FixedJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315469091}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_EnableCollision: 0
+  m_ConnectedRigidBody: {fileID: 2116844304}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_AutoConfigureConnectedAnchor: 0
+  m_Anchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 0, y: 0}
+  m_DampingRatio: 0
+  m_Frequency: 0
 --- !u!1 &1541837278
 GameObject:
   m_ObjectHideFlags: 0

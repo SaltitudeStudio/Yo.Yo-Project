@@ -62,7 +62,6 @@ public class SC_YoyoRope_Len : MonoBehaviour
     {
         if (ropeSegments.Count < maxRopeLength)
         {
-
             return false;
         }
         else
@@ -71,6 +70,8 @@ public class SC_YoyoRope_Len : MonoBehaviour
             return true;
         }
     }
+
+    //public bool 
 
     public void AddRopeSegment()
     {

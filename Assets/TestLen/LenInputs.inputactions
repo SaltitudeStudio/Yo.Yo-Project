@@ -44,6 +44,17 @@
                 },
                 {
                     "name": "",
+                    "id": "6012ec07-24fb-4d1e-ab0f-1a8d1bf39b11",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AddRopeSegment",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "7ac505e5-6dba-4b41-843b-cec23214cd2a",
                     "path": "<Keyboard>/1",
                     "interactions": "",
@@ -55,7 +66,18 @@
                 },
                 {
                     "name": "",
-                    "id": "76830df5-805c-4742-9189-51e274c6bf22",
+                    "id": "86952223-117d-40cd-8ce3-899eb2ab8e91",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RemoveRopeSegment",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a702985d-ba81-4512-8ed2-0f094d6b38bc",
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
