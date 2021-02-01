@@ -72,8 +72,11 @@ public class SC_Hand_Len : MonoBehaviour
 
     IEnumerator ThrowYoyo()
     {
-        //Aggrandir la chaine au fur et a mesure
-        return null;
+        while (!scYoyoRope.IsRopeAtMaxLength())
+        {
+            scYoyoRope.AddRopeSegment();
+            yield return null;
+        }
     }
 
     void StopYoyoThrow(InputAction.CallbackContext Context)
@@ -91,34 +94,72 @@ public class SC_Hand_Len : MonoBehaviour
     {
 
         if (Context.performed)
+        {
+
+            if (curBringBackCoro != null)
+                StopCoroutine(curBringBackCoro);
+
             curBringBackCoro = StartCoroutine(BringBackYoyo());
 
+        }
+
         if (Context.canceled)
-            StopCoroutine(curBringBackCoro);
+        {
+            if (curBringBackCoro != null)
+                StopCoroutine(curBringBackCoro);
+        }
 
     }
 
     IEnumerator BringBackYoyo()
     {
-        while (scYoyoRope.RemoveRopeSegment())
-            yield return new WaitForEndOfFrame();
+        while (!scYoyoRope.IsRopeAtMinLength())
+        {
+            scYoyoRope.RemoveRopeSegment();
+            yield return null;
+        }
+
     }
+
+    #region Debugs / Tests Functions
 
     public void OnAddRope(InputAction.CallbackContext Context)
     {
 
         if (Context.performed)
+        {
+
+            Debug.Log("OnPerformed");
+
+            if(curAddRopeCoro != null)
+                StopCoroutine(curAddRopeCoro);
+
             curAddRopeCoro = StartCoroutine(AddRope());
 
+        }
+
         if (Context.canceled)
-            StopCoroutine(curAddRopeCoro);
+        {
+            Debug.Log("OnCanceled");
+
+            if (curAddRopeCoro != null)
+                StopCoroutine(curAddRopeCoro);
+
+            //Debug.Log("curAddRopeCoro = " + curAddRopeCoro);
+
+        }
 
     }
 
     IEnumerator AddRope()
     {
-        while (scYoyoRope.AddRopeSegment())
-            yield return new WaitForEndOfFrame();
+        while (!scYoyoRope.IsRopeAtMaxLength())
+        {
+            scYoyoRope.AddRopeSegment();
+            yield return null;
+        }
     }
+
+    #endregion Debugs / Tests Functions
 
 }

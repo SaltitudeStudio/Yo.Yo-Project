@@ -42,38 +42,66 @@ public class SC_YoyoRope_Len : MonoBehaviour
         UpdateLineRenderer();
     }
 
-    public bool AddRopeSegment()
+    public void UpdateLineRenderer()
     {
 
-        Debug.Log("AddRopeSegment");
+        LineRenderer lineRender = GetComponent<LineRenderer>();
+
+        lineRender.positionCount = ropeSegments.Count;
+
+        for (int i = 0; i < ropeSegments.Count; i++)
+        {
+            lineRender.SetPosition(i, ropeSegments[i].transform.position);
+        }
+
+    }
+
+    #region Rope Enlargement Functions
+
+    public bool IsRopeAtMaxLength()
+    {
+        if (ropeSegments.Count < maxRopeLength)
+        {
+
+            return false;
+        }
+        else
+        {
+            Debug.Log("MaxLength");
+            return true;
+        }
+    }
+
+    public void AddRopeSegment()
+    {
+
+        //Debug.Log("AddRopeSegment");
 
         if (ropeSegments.Count < maxRopeLength)
         {
 
+            //Creation du segment de rope
             GameObject _newSegment = new GameObject("Segment_" + ropeSegments.Count.ToString());
             //spawn a une position plus cool pour la physique
             _newSegment.transform.position = lastSegment.transform.position;
             _newSegment.transform.parent = this.transform;
             _newSegment.layer = 9;
 
-
+            //Insertion du segment  dans la Liste a l'avant derniere position (derniere pos = Last Segment)
             for (int i = 0; i < ropeSegments.Count; i++)
             {
                 if (ropeSegments[i] == lastSegment)
                 {
-
                     ropeSegments.Insert(i, _newSegment);
-
                     break;
-
                 }
             }
 
+            //Physics
             Rigidbody2D _curSegmentRb = _newSegment.AddComponent<Rigidbody2D>();
-            //piti poids pour moins de soucis
             _curSegmentRb.mass = ropeSegmentMass;
-            //_curSegmentRb.angularDrag = 0;
 
+            //Collisions
             CircleCollider2D _curSegmentCol = _newSegment.AddComponent<CircleCollider2D>();
             _curSegmentCol.radius = ropeSegmentRadius;
 
@@ -95,22 +123,34 @@ public class SC_YoyoRope_Len : MonoBehaviour
             _curSegmentJoint.connectedAnchor = new Vector2(0, -ropeSegmentLength);
             */
 
+            //Refait la corde de joint
             for (int j = 0; j < ropeSegments.Count; j++)
                 if (j > 0)
                     ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();
-
-            return true;
-
+            //return true;
         }
-
-        return false;
-
+        //return false;
     }
 
-    public bool RemoveRopeSegment()
+    #endregion Rope Enlargement Functions
+
+    #region Rope Narrowing Functions
+
+    public bool IsRopeAtMinLength()
+    {
+        if (ropeSegments.Count == 2)
+        {
+            Debug.Log("MinLength");
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public void RemoveRopeSegment()
     {
 
-        Debug.Log("RemoveRopeSegment");
+        //Debug.Log("RemoveRopeSegment");
 
         if (ropeSegments.Count > minRopeLength)
         {
@@ -131,7 +171,7 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
                     Destroy(_segmentToRemove);
 
-                    return true;
+                    //return true;
 
                 }
 
@@ -139,23 +179,11 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
         }
 
-        return false;
+        //return false;
 
     }
 
-    public void UpdateLineRenderer()
-    {
-
-        LineRenderer lineRender = GetComponent<LineRenderer>();
-
-        lineRender.positionCount = ropeSegments.Count;
-
-        for (int i = 0; i < ropeSegments.Count; i++)
-        {
-            lineRender.SetPosition(i, ropeSegments[i].transform.position);
-        }
-
-    }
+    #endregion Rope Narrowing Functions
 
     void UpdateGlobaDist()
     {
