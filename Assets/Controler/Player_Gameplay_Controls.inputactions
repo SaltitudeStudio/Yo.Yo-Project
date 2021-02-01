@@ -61,7 +61,7 @@
                     "id": "b0fdb72c-c0b6-41d8-8a7e-a8453c2fe002",
                     "path": "1DAxis",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "AxisDeadzone(min=0.2)",
                     "groups": "",
                     "action": "move",
                     "isComposite": true,
