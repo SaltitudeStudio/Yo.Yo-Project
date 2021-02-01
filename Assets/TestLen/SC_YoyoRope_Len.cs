@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SC_YoyoRope_Len : MonoBehaviour
 {
@@ -83,64 +84,69 @@ public class SC_YoyoRope_Len : MonoBehaviour
 
     }
 
-    public void AddRopeSegment()
+    public void AddRopeSegment(int nSegmentToCreate)
     {
 
         //Debug.Log("AddRopeSegment");
 
-        if (ropeSegments.Count < maxRopeLength)
+        for (int i = 0; i < nSegmentToCreate; i++)
         {
 
-            //Creation du segment de rope
-            GameObject _newSegment = new GameObject("Segment_" + ropeSegments.Count.ToString());
-            //spawn a une position plus cool pour la physique
-            _newSegment.transform.position = lastSegment.transform.position;
-            _newSegment.transform.parent = this.transform;
-            _newSegment.layer = 9;
-
-            //Insertion du segment  dans la Liste a l'avant derniere position (derniere pos = Last Segment)
-            for (int i = 0; i < ropeSegments.Count; i++)
+            if (ropeSegments.Count < maxRopeLength)
             {
-                if (ropeSegments[i] == lastSegment)
+
+                //Creation du segment de rope
+                GameObject _newSegment = new GameObject("Segment_" + ropeSegments.Count.ToString());
+                //spawn a une position plus cool pour la physique
+                _newSegment.transform.position = lastSegment.transform.position;
+                _newSegment.transform.parent = this.transform;
+                _newSegment.layer = 9;
+
+                //Insertion du segment  dans la Liste a l'avant derniere position (derniere pos = Last Segment)
+                for (int j = 0; j < ropeSegments.Count; j++)
                 {
-                    ropeSegments.Insert(i, _newSegment);
-                    break;
+                    if (ropeSegments[j] == lastSegment)
+                    {
+                        ropeSegments.Insert(j, _newSegment);
+                        break;
+                    }
                 }
+
+                //Physics
+                Rigidbody2D _curSegmentRb = _newSegment.AddComponent<Rigidbody2D>();
+                _curSegmentRb.mass = ropeSegmentMass;
+
+                //Collisions
+                CircleCollider2D _curSegmentCol = _newSegment.AddComponent<CircleCollider2D>();
+                _curSegmentCol.radius = ropeSegmentRadius;
+
+                // How To Switch Dist/Hinge : 
+                // Garde que le paragraphe voulu ci-dessous
+                // Remplacer le type de connected body ci-ci-dessous
+                // Activer le component correspondant sur LastSegment et desactiver l'autre
+
+                //DistantJoint2D
+                DistanceJoint2D _curSegmentJoint = _newSegment.AddComponent<DistanceJoint2D>();
+                _curSegmentJoint.autoConfigureDistance = false;
+                _curSegmentJoint.distance = ropeSegmentLength;
+                _curSegmentJoint.maxDistanceOnly = true;
+
+                /*
+                // HingeJoint2D
+                HingeJoint2D _curSegmentJoint = _newSegment.AddComponent<HingeJoint2D>();
+                _curSegmentJoint.autoConfigureConnectedAnchor = false;
+                _curSegmentJoint.connectedAnchor = new Vector2(0, -ropeSegmentLength);
+                */
+
+                //Refait la corde de joint
+                for (int j = 0; j < ropeSegments.Count; j++)
+                    if (j > 0)
+                        ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();
+
             }
 
-            //Physics
-            Rigidbody2D _curSegmentRb = _newSegment.AddComponent<Rigidbody2D>();
-            _curSegmentRb.mass = ropeSegmentMass;
-
-            //Collisions
-            CircleCollider2D _curSegmentCol = _newSegment.AddComponent<CircleCollider2D>();
-            _curSegmentCol.radius = ropeSegmentRadius;
-
-            // How To Switch Dist/Hinge : 
-            // Garde que le paragraphe voulu ci-dessous
-            // Remplacer le type de connected body ci-ci-dessous
-            // Activer le component correspondant sur LastSegment et desactiver l'autre
-
-            //DistantJoint2D
-            DistanceJoint2D _curSegmentJoint = _newSegment.AddComponent<DistanceJoint2D>();
-            _curSegmentJoint.autoConfigureDistance = false;
-            _curSegmentJoint.distance = ropeSegmentLength;
-            _curSegmentJoint.maxDistanceOnly = true;
-
-            /*
-            // HingeJoint2D
-            HingeJoint2D _curSegmentJoint = _newSegment.AddComponent<HingeJoint2D>();
-            _curSegmentJoint.autoConfigureConnectedAnchor = false;
-            _curSegmentJoint.connectedAnchor = new Vector2(0, -ropeSegmentLength);
-            */
-
-            //Refait la corde de joint
-            for (int j = 0; j < ropeSegments.Count; j++)
-                if (j > 0)
-                    ropeSegments[j].GetComponent<DistanceJoint2D>().connectedBody = ropeSegments[j - 1].GetComponent<Rigidbody2D>();
-            //return true;
         }
-        //return false;
+
     }
 
     #endregion Rope Enlargement Functions

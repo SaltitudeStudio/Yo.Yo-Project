@@ -11,6 +11,7 @@ public class SC_Hand_Len : MonoBehaviour
     Coroutine curBringBackCoro;
     [SerializeField]
     float throwForce = 10;
+    Vector2 throwDir;
     private FixedJoint2D handToYoyoJoint;
 
     [Header("Yoyo References")]
@@ -27,6 +28,11 @@ public class SC_Hand_Len : MonoBehaviour
     private void Start()
     {
         handToYoyoJoint = this.GetComponent<FixedJoint2D>();
+    }
+
+    public void OnMoveHand(InputAction.CallbackContext Context)
+    {
+        throwDir = Context.ReadValue<Vector2>();          
     }
 
     public void OnYoyoAction(InputAction.CallbackContext Context)
@@ -56,36 +62,32 @@ public class SC_Hand_Len : MonoBehaviour
 
     void OnThrowYoyo(InputAction.CallbackContext Context)
     {
-
         if (Context.performed)
         {
             handToYoyoJoint.enabled = false;
             curThrowCoro = StartCoroutine(ThrowYoyo());
-            rbYoyoWeight.AddForce(GetThrow());
+            rbYoyoWeight.AddForce(GetThrowForce());
             curYoyoState = YoyoState.Thrown;
         }
-
     }
 
-    Vector2 GetThrow()
+    Vector2 GetThrowForce()
     {
-
-        //Plus tard Direction choisie par le joueur
-        Vector2 _ThrowDirection = new Vector2(1, 1);
-
-        return _ThrowDirection.normalized * throwForce;
-
+        return throwDir.normalized * throwForce;
     }
 
     IEnumerator ThrowYoyo()
     {
+
         while (!scYoyoRope.IsRopeAtMaxLength())
         {
             if (scYoyoRope.canAddNewSegment())
-                scYoyoRope.AddRopeSegment();
+                scYoyoRope.AddRopeSegment(1);
             yield return null;
         }
+
         curYoyoState = YoyoState.Away;
+
     }
 
     void StopYoyoThrow(InputAction.CallbackContext Context)
@@ -167,7 +169,7 @@ public class SC_Hand_Len : MonoBehaviour
     {
         while (!scYoyoRope.IsRopeAtMaxLength())
         {
-            scYoyoRope.AddRopeSegment();
+            scYoyoRope.AddRopeSegment(1);
             yield return null;
         }
     }
