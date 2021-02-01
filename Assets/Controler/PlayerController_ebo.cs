@@ -29,6 +29,10 @@ public class PlayerController_ebo : MonoBehaviour
     Coroutine boostCoro;
     bool goBoost = false;
 
+    [Header("Buffer")]
+    //JumpBuffer
+    bool jumpBuffered = false;
+
 
 
     float joysticeValue = 0; //Velocité du joueur
@@ -38,8 +42,7 @@ public class PlayerController_ebo : MonoBehaviour
     bool isJumping = false;
 
 
-    //JumpBuffer
-    bool jumpBuffered = false;
+    
 
 
 
@@ -192,19 +195,19 @@ public class PlayerController_ebo : MonoBehaviour
             StartCoroutine(Jumping(0));
         }
         else
-            StartCoroutine(BufferingJump(0.3f));
+            StartCoroutine(BufferingJump(0.15f));
 
             
         //else Debug.Log("Can't Jump");
     }
 
-    IEnumerator BufferingJump(float bufferLengthMemory)
+    IEnumerator BufferingJump(float _bufferLengthMemory)
     {
         float _counter = 0;
 
         jumpBuffered = true;
 
-        while(_counter <= bufferLengthMemory)
+        while(_counter <= _bufferLengthMemory)
         {
             yield return null;
         }
