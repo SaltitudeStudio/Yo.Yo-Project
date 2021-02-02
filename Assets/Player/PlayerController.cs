@@ -11,7 +11,7 @@ using UnityEngine;
 /// /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-public class PlayerController_ebo : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     Player_Gameplay_Controls player_Controls = null; //Schema contenant les controles du joueur
     Rigidbody2D playerRigidBody = null; //Rigidbody du player
