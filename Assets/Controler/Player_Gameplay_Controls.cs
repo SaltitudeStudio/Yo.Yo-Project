@@ -33,6 +33,22 @@ public class @Player_Gameplay_Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""YoyoAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""48b78a4a-069b-4642-b07a-d6c8af78331c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Hand"",
+                    ""type"": ""Value"",
+                    ""id"": ""7c7943c2-7fd0-406d-bbfe-537a7a7e0048"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -123,6 +139,28 @@ public class @Player_Gameplay_Controls : IInputActionCollection, IDisposable
                     ""action"": ""jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3f4cc4c-499b-4f1f-a91c-ada5520c4bb6"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone(min=0.3)"",
+                    ""groups"": """",
+                    ""action"": ""Hand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc9eb128-a0f5-4de0-a6aa-7a7dc21764f1"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""YoyoAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -133,6 +171,8 @@ public class @Player_Gameplay_Controls : IInputActionCollection, IDisposable
         m_Ground = asset.FindActionMap("Ground", throwIfNotFound: true);
         m_Ground_move = m_Ground.FindAction("move", throwIfNotFound: true);
         m_Ground_jump = m_Ground.FindAction("jump", throwIfNotFound: true);
+        m_Ground_YoyoAction = m_Ground.FindAction("YoyoAction", throwIfNotFound: true);
+        m_Ground_Hand = m_Ground.FindAction("Hand", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -184,12 +224,16 @@ public class @Player_Gameplay_Controls : IInputActionCollection, IDisposable
     private IGroundActions m_GroundActionsCallbackInterface;
     private readonly InputAction m_Ground_move;
     private readonly InputAction m_Ground_jump;
+    private readonly InputAction m_Ground_YoyoAction;
+    private readonly InputAction m_Ground_Hand;
     public struct GroundActions
     {
         private @Player_Gameplay_Controls m_Wrapper;
         public GroundActions(@Player_Gameplay_Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @move => m_Wrapper.m_Ground_move;
         public InputAction @jump => m_Wrapper.m_Ground_jump;
+        public InputAction @YoyoAction => m_Wrapper.m_Ground_YoyoAction;
+        public InputAction @Hand => m_Wrapper.m_Ground_Hand;
         public InputActionMap Get() { return m_Wrapper.m_Ground; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -205,6 +249,12 @@ public class @Player_Gameplay_Controls : IInputActionCollection, IDisposable
                 @jump.started -= m_Wrapper.m_GroundActionsCallbackInterface.OnJump;
                 @jump.performed -= m_Wrapper.m_GroundActionsCallbackInterface.OnJump;
                 @jump.canceled -= m_Wrapper.m_GroundActionsCallbackInterface.OnJump;
+                @YoyoAction.started -= m_Wrapper.m_GroundActionsCallbackInterface.OnYoyoAction;
+                @YoyoAction.performed -= m_Wrapper.m_GroundActionsCallbackInterface.OnYoyoAction;
+                @YoyoAction.canceled -= m_Wrapper.m_GroundActionsCallbackInterface.OnYoyoAction;
+                @Hand.started -= m_Wrapper.m_GroundActionsCallbackInterface.OnHand;
+                @Hand.performed -= m_Wrapper.m_GroundActionsCallbackInterface.OnHand;
+                @Hand.canceled -= m_Wrapper.m_GroundActionsCallbackInterface.OnHand;
             }
             m_Wrapper.m_GroundActionsCallbackInterface = instance;
             if (instance != null)
@@ -215,6 +265,12 @@ public class @Player_Gameplay_Controls : IInputActionCollection, IDisposable
                 @jump.started += instance.OnJump;
                 @jump.performed += instance.OnJump;
                 @jump.canceled += instance.OnJump;
+                @YoyoAction.started += instance.OnYoyoAction;
+                @YoyoAction.performed += instance.OnYoyoAction;
+                @YoyoAction.canceled += instance.OnYoyoAction;
+                @Hand.started += instance.OnHand;
+                @Hand.performed += instance.OnHand;
+                @Hand.canceled += instance.OnHand;
             }
         }
     }
@@ -223,5 +279,7 @@ public class @Player_Gameplay_Controls : IInputActionCollection, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnYoyoAction(InputAction.CallbackContext context);
+        void OnHand(InputAction.CallbackContext context);
     }
 }

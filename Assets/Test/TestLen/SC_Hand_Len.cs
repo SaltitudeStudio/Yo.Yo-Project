@@ -12,6 +12,8 @@ public class SC_Hand_Len : MonoBehaviour
 
     [SerializeField]
     float handDistFromBody = 0.7f;
+    [SerializeField]
+    float handHeight = 0;
 
     [SerializeField]
     float throwForce = 20;
@@ -61,9 +63,15 @@ public class SC_Hand_Len : MonoBehaviour
 
     public void OnMoveHand(InputAction.CallbackContext Context)
     {
+
         throwDir = Context.ReadValue<Vector2>(); //Stock l'angle du RStick  
-        this.transform.localPosition = throwDir * handDistFromBody;
+
+        Vector2 localPos = throwDir * handDistFromBody;
+        localPos.y += handHeight;
+        this.transform.localPosition = localPos;
+
         bodyToYoyoJoint.anchor = this.transform.localPosition;
+
     }
 
     //Appeler par la touche d'action
