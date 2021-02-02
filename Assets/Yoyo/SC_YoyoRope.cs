@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SC_YoyoRope_Len : MonoBehaviour
+public class SC_YoyoRope : MonoBehaviour
 {
 
     [Header("Rope Parameters")]

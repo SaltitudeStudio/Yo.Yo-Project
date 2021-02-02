@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SC_YoyoRopeTest_Len : MonoBehaviour
+public class SC_YoyoRopeTest : MonoBehaviour
 {
 
     [Header("Rope Parameters")]

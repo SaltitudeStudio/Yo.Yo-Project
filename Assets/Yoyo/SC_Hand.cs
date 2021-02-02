@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SC_Hand_Len : MonoBehaviour
+public class SC_Hand : MonoBehaviour
 {
 
     public enum YoyoState { InHand, Thrown, Away }
@@ -21,7 +21,7 @@ public class SC_Hand_Len : MonoBehaviour
 
     private FixedJoint2D bodyToYoyoJoint;
     private FixedJoint2D handToYoyoJoint;
-    private SC_YoyoRope_Len scYoyoRope;
+    private SC_YoyoRope scYoyoRope;
     private Rigidbody2D rbYoyoWeight;
     private Rigidbody2D rbFirstSegment;
 
@@ -48,7 +48,7 @@ public class SC_Hand_Len : MonoBehaviour
     void GetReferences()
     {
 
-        scYoyoRope = curEquippedYoyo.GetComponent<SC_YoyoRope_Len>();
+        scYoyoRope = curEquippedYoyo.GetComponent<SC_YoyoRope>();
         rbYoyoWeight = scYoyoRope.rbYoyoWeight;
         rbFirstSegment = scYoyoRope.firstSegment.GetComponent<Rigidbody2D>();
 
