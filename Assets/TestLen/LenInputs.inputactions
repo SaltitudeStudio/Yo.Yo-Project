@@ -99,7 +99,7 @@
                     "id": "d29c7d45-714a-4a6b-bec7-2f43f42b9d6c",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "StickDeadzone(min=0.3)",
                     "groups": "Gamepad",
                     "action": "Hand",
                     "isComposite": false,

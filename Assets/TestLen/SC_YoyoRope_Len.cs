@@ -27,12 +27,11 @@ public class SC_YoyoRope_Len : MonoBehaviour
     [SerializeField]
     LineRenderer ropeRenderer;
     [SerializeField]
-    GameObject firstSegment;
-    [SerializeField]
     GameObject lastSegment;
 
     [Header("Public References (Needed by 'Hand')")]
     public Rigidbody2D rbYoyoWeight;
+    public GameObject firstSegment;
 
     [Header("Debug DO NOT TOUCH")]
     [SerializeField]

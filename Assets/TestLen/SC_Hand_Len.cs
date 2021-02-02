@@ -11,12 +11,21 @@ public class SC_Hand_Len : MonoBehaviour
     Coroutine curBringBackCoro;
 
     [SerializeField]
+    float handDistFromBody = 0.7f;
+
+    [SerializeField]
     float throwForce = 20;
     Vector2 throwDir;
 
+    private FixedJoint2D bodyToYoyoJoint;
     private FixedJoint2D handToYoyoJoint;
     private SC_YoyoRope_Len scYoyoRope;
     private Rigidbody2D rbYoyoWeight;
+    private Rigidbody2D rbFirstSegment;
+
+    [Header("References")]
+    [SerializeField]
+    GameObject body;
 
     [Header("Yoyo References")]
     [SerializeField]
@@ -30,6 +39,7 @@ public class SC_Hand_Len : MonoBehaviour
     private void Start()
     {
         GetReferences();
+        OnHand();
     }
 
     //Recupere les références sur le yoyo equipé
@@ -38,15 +48,22 @@ public class SC_Hand_Len : MonoBehaviour
 
         scYoyoRope = curEquippedYoyo.GetComponent<SC_YoyoRope_Len>();
         rbYoyoWeight = scYoyoRope.rbYoyoWeight;
+        rbFirstSegment = scYoyoRope.firstSegment.GetComponent<Rigidbody2D>();
 
         handToYoyoJoint = this.GetComponent<FixedJoint2D>();
         handToYoyoJoint.connectedBody = rbYoyoWeight;
+
+        bodyToYoyoJoint = body.GetComponent<FixedJoint2D>();
+        bodyToYoyoJoint.connectedBody = rbFirstSegment;
+        bodyToYoyoJoint.anchor = this.transform.localPosition;
 
     }
 
     public void OnMoveHand(InputAction.CallbackContext Context)
     {
-        throwDir = Context.ReadValue<Vector2>(); //Stock l'angle du RStick      
+        throwDir = Context.ReadValue<Vector2>(); //Stock l'angle du RStick  
+        this.transform.localPosition = throwDir * handDistFromBody;
+        bodyToYoyoJoint.anchor = this.transform.localPosition;
     }
 
     //Appeler par la touche d'action
@@ -75,6 +92,17 @@ public class SC_Hand_Len : MonoBehaviour
 
     }
 
+    void OnHand()
+    {
+
+        curYoyoState = YoyoState.InHand; //Change la State
+        handToYoyoJoint.enabled = true; //La main "tien" le yoyo
+
+        scYoyoRope.EnableSegmentPhysics(false); //On desactive la physique de la corde
+        rbYoyoWeight.gravityScale = 0; // On desactive le gravité sur le yoyo pour pas que la main tombe
+
+    }
+
     void OnThrowYoyo(InputAction.CallbackContext Context)
     {
         if (Context.performed) //Quand le btn est appuyé =>
@@ -97,6 +125,7 @@ public class SC_Hand_Len : MonoBehaviour
 
         scYoyoRope.EnableSegmentPhysics(false); //On desactive la physique de la corde pour eviter de gener le lancé au maximum
 
+        rbYoyoWeight.gravityScale = 1; // On active la gravité sur le poid du yoyo
         rbYoyoWeight.velocity = GetThrowForce(); //On "lance" le poids du yoyo
 
         scYoyoRope.AddRopeSegment(scYoyoRope.segmentQuantityToAdd(rbYoyoWeight.velocity)); //Pré ajoute un certain nombre de segment a la corde
@@ -169,8 +198,7 @@ public class SC_Hand_Len : MonoBehaviour
             yield return null;
         }
 
-        curYoyoState = YoyoState.InHand; //Change la State
-        handToYoyoJoint.enabled = true; //La main "tien" le yoyo
+        OnHand(); //Fonction qui "met" le yoyo dans la main
 
     }
 
