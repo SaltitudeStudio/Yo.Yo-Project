@@ -74,6 +74,11 @@ public class SC_Hand : MonoBehaviour
 
     }
 
+    //States Order
+    //
+    //  InHand ---> Throw ------------->\/
+    //  /\<-------- BringBack <-----> Away
+    //
     //Appeler par la touche d'action
     public void OnYoyoAction(InputAction.CallbackContext Context)
     {
@@ -100,16 +105,7 @@ public class SC_Hand : MonoBehaviour
 
     }
 
-    void OnHand()
-    {
-
-        curYoyoState = YoyoState.InHand; //Change la State
-        handToYoyoJoint.enabled = true; //La main "tien" le yoyo
-
-        scYoyoRope.EnableSegmentPhysics(false); //On desactive la physique de la corde
-        rbYoyoWeight.gravityScale = 0; // On desactive le gravité sur le yoyo pour pas que la main tombe
-
-    }
+    #region InHand State Functions (To Thrown)
 
     void OnThrowYoyo(InputAction.CallbackContext Context)
     {
@@ -157,6 +153,10 @@ public class SC_Hand : MonoBehaviour
         return throwDir.normalized * throwForce;
     }
 
+    #endregion InHand State Functions (To Thrown)
+
+    #region Trow State Functions (To Away)
+
     //Stop le deroulement de la corde pendant que le yoyo est jeté 
     void StopYoyoThrow(InputAction.CallbackContext Context)
     {
@@ -173,6 +173,10 @@ public class SC_Hand : MonoBehaviour
 
         }
     }
+
+    #endregion Trow State Functions (To Away)
+
+    #region Away State Functions (To InHand)
 
     //Ramene le yoyo a la main (maintenir pour ramener)
     public void OnBringBackYoyo(InputAction.CallbackContext Context)
@@ -209,6 +213,19 @@ public class SC_Hand : MonoBehaviour
         OnHand(); //Fonction qui "met" le yoyo dans la main
 
     }
+
+    void OnHand()
+    {
+
+        curYoyoState = YoyoState.InHand; //Change la State
+        handToYoyoJoint.enabled = true; //La main "tien" le yoyo
+
+        scYoyoRope.EnableSegmentPhysics(false); //On desactive la physique de la corde
+        rbYoyoWeight.gravityScale = 0; // On desactive le gravité sur le yoyo pour pas que la main tombe
+
+    }
+
+    #endregion Away State Functions (To InHand)
 
     #region Debugs / Tests Functions
 
