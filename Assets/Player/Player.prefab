@@ -1051,6 +1051,7 @@ MonoBehaviour:
   kneeCheck_l: {fileID: 5050138873180405111}
   feetCheck_r: {fileID: 5050138872300809794}
   kneeCheck_r: {fileID: 5050138873384464382}
+  velocity_Y_boost: 100000
   moveMultiplierForce: 2500
   jumpMultiplier: 150000
   curveMoveGroundForce:

@@ -34,7 +34,7 @@ public class SC_PlayerController : MonoBehaviour
     [SerializeField] Transform feetCheck_r;
     [SerializeField] Transform kneeCheck_r;
     //valeur de boost en velocité en y pour permettre le passage si les pieds butent dans une plateforme
-    float velocity_Y_boost = 0;
+    [SerializeField] float velocity_Y_boost = 2000;
     Coroutine boostCoro;
     bool goBoost = false;
 
@@ -150,11 +150,11 @@ public class SC_PlayerController : MonoBehaviour
 
 
         //si les pieds sont bloqués mais pas les genoux on booste
-        if (LateralRaycastCheck(_feetCheck, _dir) == true && LateralRaycastCheck(_kneeCheck, _dir) == false)
+        if (LateralRaycastCheck(isGrounded_b? _feetCheck.position: _feetCheck.position+-Vector3.up/5, _dir) == true && LateralRaycastCheck(_kneeCheck.position, _dir) == false)
         {
             goBoost = true;
             if (boostCoro == null)
-                StartCoroutine(VerticalBoosting(0.1f, 1));
+                StartCoroutine(VerticalBoosting(0.1f, velocity_Y_boost));
         }
         else
             goBoost = false;
@@ -164,20 +164,20 @@ public class SC_PlayerController : MonoBehaviour
     }
 
     //fonction pour les checks raycast
-    bool LateralRaycastCheck(Transform _startPoint, Vector2 _dir)
+    bool LateralRaycastCheck(Vector3 _startPoint, Vector2 _dir)
     {
         int layerMask = 1 << 10;
-        RaycastHit2D _hit = Physics2D.Raycast(_startPoint.position, _dir, 0.3f, layerMask);
+        RaycastHit2D _hit = Physics2D.Raycast(_startPoint, _dir, 0.3f, layerMask);
         
         if (_hit.collider != null)
         {
-            Debug.DrawRay(_startPoint.position, _dir * 1, Color.red,1) ;
+            Debug.DrawRay(_startPoint, _dir * 1, Color.red,1) ;
 
             return true;
         }
         else
         {
-            Debug.DrawRay(_startPoint.position, _dir * 1, Color.green);
+            Debug.DrawRay(_startPoint, _dir * 1, Color.green);
             return false;
         }
 
@@ -201,7 +201,7 @@ public class SC_PlayerController : MonoBehaviour
             vertiVelo.y = 0;
             playerRigidBody.velocity = vertiVelo;
             /////
-            playerRigidBody.AddForce(Vector2.up * 550, ForceMode2D.Force);
+            playerRigidBody.AddForce(Vector2.up * _boostVelocityStrength, ForceMode2D.Force);
         }
 
         boostCoro = null;
