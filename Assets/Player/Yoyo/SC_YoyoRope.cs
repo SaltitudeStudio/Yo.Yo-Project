@@ -21,6 +21,12 @@ public class SC_YoyoRope : MonoBehaviour
     float ropeGravityScale = 1f;
     private float curGravityScale = 0;
 
+    [Header("Rope AddPhysics Parameters")]
+    [SerializeField]
+    bool transHandForceToRope = true;
+    [SerializeField]
+    float forceMultiplicator = 1f;
+
     [Header("Rope References")]
     [SerializeField]
     GameObject ropeContainer;
@@ -226,6 +232,19 @@ public class SC_YoyoRope : MonoBehaviour
             ropeSegments[i].GetComponent<Rigidbody2D>().gravityScale = curGravityScale;
             ropeSegments[i].GetComponent<Rigidbody2D>().mass = curSegmentMass;
         }
+
+    }
+
+    public void OnAddForceToRope(Vector2 oldPos, Vector2 newPos)
+    {
+
+        Vector2 dir = newPos - oldPos;
+
+        float d = dir.magnitude;
+        float v = d / Time.deltaTime;
+        float F = rbYoyoWeight.mass * v / Time.deltaTime;
+
+        firstSegment.GetComponent<Rigidbody2D>().AddForce(F * forceMultiplicator * dir.normalized);
 
     }
 

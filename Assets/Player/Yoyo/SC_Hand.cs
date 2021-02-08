@@ -66,11 +66,15 @@ public class SC_Hand : MonoBehaviour
 
         throwDir = Context.ReadValue<Vector2>(); //Stock l'angle du RStick  
 
-        Vector2 localPos = throwDir * handDistFromBody;
-        localPos.y += handHeight;
-        this.transform.localPosition = localPos;
+        Vector2 oldLocalPos = this.transform.localPosition;
+
+        Vector2 newLocalPos = throwDir * handDistFromBody;
+        newLocalPos.y += handHeight;
+        this.transform.localPosition = newLocalPos;
 
         bodyToYoyoJoint.anchor = this.transform.localPosition;
+
+        scYoyoRope.OnAddForceToRope(oldLocalPos, newLocalPos);
 
     }
 

@@ -638,6 +638,8 @@ MonoBehaviour:
   ropeSegmentRadius: 0.04
   ropeSegmentMass: 0.1
   ropeGravityScale: 1
+  transHandForceToRope: 1
+  forceMultiplicator: 1
   ropeContainer: {fileID: 1996290209093129271}
   ropeRenderer: {fileID: 1996290209093129274}
   lastSegment: {fileID: 1996290209900761525}
