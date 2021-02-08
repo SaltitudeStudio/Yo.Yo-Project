@@ -7,41 +7,31 @@ public class SC_YoyoRope : MonoBehaviour
 {
 
     [Header("Rope Parameters")]
-    [SerializeField, Range(2, 100)]
-    int maxRopeLength = 50;
+    [SerializeField, Range(2, 100)] int maxRopeLength = 50;
     private int minRopeLength = 2;
-    [SerializeField]
-    float ropeSegmentLength = 0.1f;
-    [SerializeField]
-    float ropeSegmentRadius = 0.04f;
-    [SerializeField]
-    float ropeSegmentMass = 0.1f;
+    [SerializeField] float ropeSegmentLength = 0.1f;
+    [SerializeField] float ropeSegmentRadius = 0.04f;
+    [SerializeField] float ropeSegmentMass = 0.1f;
     private float curSegmentMass = 0;
-    [SerializeField]
-    float ropeGravityScale = 1f;
+    [SerializeField] float ropeGravityScale = 1f;
     private float curGravityScale = 0;
 
     [Header("Rope AddPhysics Parameters")]
-    [SerializeField]
-    bool transHandForceToRope = true;
-    [SerializeField, Range(1,20)]
-    float forceMultiplicator = 10f;
+    [SerializeField] bool transHandForceToRope = true;
+    [SerializeField, Range(1, 20)] float forceMultiplicator = 10f;
+    [SerializeField, Range(0, 1)] float ropePercentageAffected = 0;
 
     [Header("Rope References")]
-    [SerializeField]
-    GameObject ropeContainer;
-    [SerializeField]
-    LineRenderer ropeRenderer;
-    [SerializeField]
-    GameObject lastSegment;
+    [SerializeField] GameObject ropeContainer;
+    [SerializeField] LineRenderer ropeRenderer;
+    [SerializeField] GameObject lastSegment;
 
     [Header("Public References (Needed by 'Hand')")]
     public Rigidbody2D rbYoyoWeight;
     public GameObject firstSegment;
 
     [Header("Debug DO NOT TOUCH")]
-    [SerializeField]
-    List<GameObject> ropeSegments;
+    [SerializeField] List<GameObject> ropeSegments;
 
     // Start is called before the first frame update
     void Start()
@@ -235,19 +225,43 @@ public class SC_YoyoRope : MonoBehaviour
 
     }
 
+    //Ajoute une force dependant de mvt d ela main au premier segment
     public void OnAddForceToRope(Vector2 oldPos, Vector2 newPos)
     {
         if (transHandForceToRope)
         {
 
+            //Direction du mvt de la main
             Vector2 dir = newPos - oldPos;
 
+            //Calcul de la force qu'il aurait demander pour être effectué
             float d = dir.magnitude;
             float v = d / Time.deltaTime;
             float F = rbYoyoWeight.mass * v / Time.deltaTime;
 
+            //Application de cette force au premier segment
             firstSegment.GetComponent<Rigidbody2D>().AddForce(F * forceMultiplicator * dir.normalized);
 
+        }
+    }
+
+    //WIP
+    IEnumerator TransferingForceToRope(Vector2 oldPos, Vector2 newPos)
+    {
+
+        int segmentQuantityToAffect = Mathf.RoundToInt(ropeSegments.Count * ropePercentageAffected);
+        if (segmentQuantityToAffect == 0) segmentQuantityToAffect += 1;
+
+        Vector2 dir = newPos - oldPos;
+
+        float d = dir.magnitude;
+        float v = d / Time.deltaTime;
+        float F = rbYoyoWeight.mass * v / Time.deltaTime;
+
+        for (int i = 0; i < segmentQuantityToAffect ; i++)
+        {
+            ropeSegments[i].GetComponent<Rigidbody2D>().AddForce(F * forceMultiplicator * dir.normalized);
+            yield return null;// == 1/frame ajouter une var de speed ?
         }
 
     }

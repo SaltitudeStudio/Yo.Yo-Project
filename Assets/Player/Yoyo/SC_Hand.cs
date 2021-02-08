@@ -10,33 +10,29 @@ public class SC_Hand : MonoBehaviour
     Coroutine curThrowCoro;
     Coroutine curBringBackCoro;
 
-    [SerializeField]
-    float handDistFromBody = 0.7f;
-    [SerializeField]
-    float handHeight = 0;
+    [SerializeField] float handDistFromBody = 0.7f;
+    [SerializeField] float handHeight = 0;
 
-    [SerializeField]
-    float throwForce = 20;
+    [SerializeField] float throwForce = 20;
     Vector2 throwDir;
+
+    private SC_YoyoRope scYoyoRope;
 
     private FixedJoint2D bodyToYoyoJoint;
     private FixedJoint2D handToYoyoJoint;
-    private SC_YoyoRope scYoyoRope;
+
     private Rigidbody2D rbYoyoWeight;
     private Rigidbody2D rbFirstSegment;
     private Rigidbody2D rbHand;
 
     [Header("References")]
-    [SerializeField]
-    GameObject body;
+    [SerializeField] GameObject body;
 
     [Header("Yoyo References")]
-    [SerializeField]
-    GameObject curEquippedYoyo;
+    [SerializeField] GameObject curEquippedYoyo;
 
     [Header("Debug DO NOT TOUCH")]
-    [SerializeField]
-    YoyoState curYoyoState;
+    [SerializeField] YoyoState curYoyoState;
     Coroutine curAddRopeCoro;
 
     private void Start()
@@ -268,6 +264,7 @@ public class SC_Hand : MonoBehaviour
         }
     }
 
+    //Envois une force dans la corde quand le joueur bouge la main et que le yoyo est lancé
     void TransfertForceToRope(Vector2 newLocalPos, Vector2 oldLocalPos)
     {
 
@@ -277,6 +274,7 @@ public class SC_Hand : MonoBehaviour
 
         //Debug.Log(dir.normalized + " | " + yoyoDir.normalized + " | " + dotProd);
 
+        //ajouter une vrais sensibilité
         if (Mathf.Abs(dotProd) > 0.2 && dotProd > -0.3)
             scYoyoRope.OnAddForceToRope(oldLocalPos, newLocalPos);
 
