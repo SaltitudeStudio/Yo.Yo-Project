@@ -24,8 +24,8 @@ public class SC_YoyoRope : MonoBehaviour
     [Header("Rope AddPhysics Parameters")]
     [SerializeField]
     bool transHandForceToRope = true;
-    [SerializeField]
-    float forceMultiplicator = 1f;
+    [SerializeField, Range(1,20)]
+    float forceMultiplicator = 10f;
 
     [Header("Rope References")]
     [SerializeField]
@@ -237,14 +237,18 @@ public class SC_YoyoRope : MonoBehaviour
 
     public void OnAddForceToRope(Vector2 oldPos, Vector2 newPos)
     {
+        if (transHandForceToRope)
+        {
 
-        Vector2 dir = newPos - oldPos;
+            Vector2 dir = newPos - oldPos;
 
-        float d = dir.magnitude;
-        float v = d / Time.deltaTime;
-        float F = rbYoyoWeight.mass * v / Time.deltaTime;
+            float d = dir.magnitude;
+            float v = d / Time.deltaTime;
+            float F = rbYoyoWeight.mass * v / Time.deltaTime;
 
-        firstSegment.GetComponent<Rigidbody2D>().AddForce(F * forceMultiplicator * dir.normalized);
+            firstSegment.GetComponent<Rigidbody2D>().AddForce(F * forceMultiplicator * dir.normalized);
+
+        }
 
     }
 

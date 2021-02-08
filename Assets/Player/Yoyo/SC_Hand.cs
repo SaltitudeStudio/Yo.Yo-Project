@@ -24,6 +24,7 @@ public class SC_Hand : MonoBehaviour
     private SC_YoyoRope scYoyoRope;
     private Rigidbody2D rbYoyoWeight;
     private Rigidbody2D rbFirstSegment;
+    private Rigidbody2D rbHand;
 
     [Header("References")]
     [SerializeField]
@@ -47,6 +48,8 @@ public class SC_Hand : MonoBehaviour
     //Recupere les références sur le yoyo equipé
     void GetReferences()
     {
+
+        rbHand = this.GetComponent<Rigidbody2D>();
 
         scYoyoRope = curEquippedYoyo.GetComponent<SC_YoyoRope>();
         rbYoyoWeight = scYoyoRope.rbYoyoWeight;
@@ -74,7 +77,8 @@ public class SC_Hand : MonoBehaviour
 
         bodyToYoyoJoint.anchor = this.transform.localPosition;
 
-        scYoyoRope.OnAddForceToRope(oldLocalPos, newLocalPos);
+        if (curYoyoState != YoyoState.InHand)
+            TransfertForceToRope(newLocalPos, oldLocalPos);
 
     }
 
@@ -120,13 +124,13 @@ public class SC_Hand : MonoBehaviour
             if (curThrowCoro != null)
                 StopCoroutine(curThrowCoro);
             curThrowCoro = StartCoroutine(ThrowingYoyo());
-          
+
             curYoyoState = YoyoState.Thrown; //Change la State
 
         }
     }
 
-    IEnumerator ThrowingYoyo() 
+    IEnumerator ThrowingYoyo()
     {
 
         handToYoyoJoint.enabled = false; //La main "lache" le yoyo
@@ -152,7 +156,7 @@ public class SC_Hand : MonoBehaviour
 
     }
 
-    Vector2 GetThrowForce() 
+    Vector2 GetThrowForce()
     {
         return throwDir.normalized * throwForce;
     }
@@ -231,7 +235,7 @@ public class SC_Hand : MonoBehaviour
 
     #endregion Away State Functions (To InHand)
 
-    #region Debugs / Tests Functions
+    #region Additionals Functions
 
     //Tant qu'on maintient la touche ajoute de la corde
     public void OnAddRope(InputAction.CallbackContext Context)
@@ -264,6 +268,20 @@ public class SC_Hand : MonoBehaviour
         }
     }
 
-    #endregion Debugs / Tests Functions
+    void TransfertForceToRope(Vector2 newLocalPos, Vector2 oldLocalPos)
+    {
+
+        Vector2 dir = newLocalPos - oldLocalPos;
+        Vector2 yoyoDir = rbYoyoWeight.position - rbHand.position;
+        float dotProd = Vector2.Dot(dir.normalized, yoyoDir.normalized);
+
+        //Debug.Log(dir.normalized + " | " + yoyoDir.normalized + " | " + dotProd);
+
+        if (Mathf.Abs(dotProd) > 0.2 && dotProd > -0.3)
+            scYoyoRope.OnAddForceToRope(oldLocalPos, newLocalPos);
+
+    }
+
+    #endregion Additionals Functions
 
 }
