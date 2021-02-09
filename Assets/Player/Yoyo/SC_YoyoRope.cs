@@ -16,10 +16,13 @@ public class SC_YoyoRope : MonoBehaviour
     [SerializeField] float ropeGravityScale = 1f;
     private float curGravityScale = 0;
 
-    [Header("Rope AddPhysics Parameters")]
-    [SerializeField] bool transHandForceToRope = true;
-    [SerializeField, Range(1, 20)] float forceMultiplicator = 10f;
-    [SerializeField, Range(0, 1)] float ropePercentageAffected = 0;
+    [Header("Rope Waves Parameters")]
+    [SerializeField] bool useRopeWave = true;
+    [SerializeField] float waveForceValue = 500;
+    [SerializeField] float yoyoWeightForceFactor = 10f;
+    [SerializeField] bool waveAllRope = true;
+    [SerializeField, Range(0, 1)] float ropePercentageAffected = 1;
+    private Coroutine curRopeWaveCoro = null;
 
     [Header("Rope References")]
     [SerializeField] GameObject ropeContainer;
@@ -225,44 +228,38 @@ public class SC_YoyoRope : MonoBehaviour
 
     }
 
-    //Ajoute une force dependant de mvt d ela main au premier segment
-    public void OnAddForceToRope(Vector2 oldPos, Vector2 newPos)
+    //Gère le lancement de la Coroutine
+    public void OnAddForceToRope(Vector2 dir)
     {
-        if (transHandForceToRope)
+        if (useRopeWave)
         {
 
-            //Direction du mvt de la main
-            Vector2 dir = newPos - oldPos;
+            if (curRopeWaveCoro != null)
+                StopCoroutine(curRopeWaveCoro);
 
-            //Calcul de la force qu'il aurait demander pour être effectué
-            float d = dir.magnitude;
-            float v = d / Time.deltaTime;
-            float F = rbYoyoWeight.mass * v / Time.deltaTime;
-
-            //Application de cette force au premier segment
-            firstSegment.GetComponent<Rigidbody2D>().AddForce(F * forceMultiplicator * dir.normalized);
+            curRopeWaveCoro = StartCoroutine(TransferingForceToRope(dir));
 
         }
     }
 
-    //WIP
-    IEnumerator TransferingForceToRope(Vector2 oldPos, Vector2 newPos)
+    //Coroutine d'ajout de la force
+    IEnumerator TransferingForceToRope(Vector2 dir)
     {
 
+        //Calcule le nombre de segment a qui donner une force (min 1)
         int segmentQuantityToAffect = Mathf.RoundToInt(ropeSegments.Count * ropePercentageAffected);
         if (segmentQuantityToAffect == 0) segmentQuantityToAffect += 1;
 
-        Vector2 dir = newPos - oldPos;
-
-        float d = dir.magnitude;
-        float v = d / Time.deltaTime;
-        float F = rbYoyoWeight.mass * v / Time.deltaTime;
-
-        for (int i = 0; i < segmentQuantityToAffect ; i++)
+        //Ajoute la force a auteur de 1 segment par frame
+        for (int i = 0; i < segmentQuantityToAffect; i++)
         {
-            ropeSegments[i].GetComponent<Rigidbody2D>().AddForce(F * forceMultiplicator * dir.normalized);
+            ropeSegments[i].GetComponent<Rigidbody2D>().AddForce(dir.normalized * waveForceValue);
             yield return null;// == 1/frame ajouter une var de speed ?
         }
+
+        //Si Toute la corde etait concerner ajouté une force au poid du yoyo
+        if (segmentQuantityToAffect == ropeSegments.Count)
+            rbYoyoWeight.AddForce(dir.normalized * waveForceValue * yoyoWeightForceFactor);
 
     }
 

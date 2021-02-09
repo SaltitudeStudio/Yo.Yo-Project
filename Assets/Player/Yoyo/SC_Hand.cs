@@ -14,7 +14,7 @@ public class SC_Hand : MonoBehaviour
     [SerializeField] float handHeight = 0;
 
     [SerializeField] float throwForce = 20;
-    Vector2 throwDir;
+    Vector2 rStickPos;
 
     private SC_YoyoRope scYoyoRope;
 
@@ -63,17 +63,15 @@ public class SC_Hand : MonoBehaviour
     public void OnMoveHand(InputAction.CallbackContext Context)
     {
 
-        throwDir = Context.ReadValue<Vector2>(); //Stock l'angle du RStick  
+        rStickPos = Context.ReadValue<Vector2>(); //Stock l'angle du RStick  
 
         Vector2 oldLocalPos = this.transform.localPosition;
-
-        Vector2 newLocalPos = throwDir * handDistFromBody;
+        Vector2 newLocalPos = rStickPos * handDistFromBody;
         newLocalPos.y += handHeight;
         this.transform.localPosition = newLocalPos;
-
         bodyToYoyoJoint.anchor = this.transform.localPosition;
 
-        if (curYoyoState != YoyoState.InHand)
+        if (curYoyoState != YoyoState.InHand && rStickPos.magnitude > 0.2f)
             TransfertForceToRope(newLocalPos, oldLocalPos);
 
     }
@@ -154,7 +152,7 @@ public class SC_Hand : MonoBehaviour
 
     Vector2 GetThrowForce()
     {
-        return throwDir.normalized * throwForce;
+        return rStickPos.normalized * throwForce;
     }
 
     #endregion InHand State Functions (To Thrown)
@@ -274,9 +272,8 @@ public class SC_Hand : MonoBehaviour
 
         //Debug.Log(dir.normalized + " | " + yoyoDir.normalized + " | " + dotProd);
 
-        //ajouter une vrais sensibilité
-        if (Mathf.Abs(dotProd) > 0.2 && dotProd > -0.3)
-            scYoyoRope.OnAddForceToRope(oldLocalPos, newLocalPos);
+        if (dir.magnitude > 0.2 && dotProd > -0.3)
+            scYoyoRope.OnAddForceToRope(dir);
 
     }
 
